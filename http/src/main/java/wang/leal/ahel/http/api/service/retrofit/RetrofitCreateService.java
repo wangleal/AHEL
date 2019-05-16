@@ -2,6 +2,7 @@ package wang.leal.ahel.http.api.service.retrofit;
 
 import android.text.TextUtils;
 
+import wang.leal.ahel.http.api.ApiHelper;
 import wang.leal.ahel.http.api.service.CreateService;
 import wang.leal.ahel.http.api.service.retrofit.converter.ApiConverterFactory;
 import wang.leal.ahel.http.okhttp.OkHttpManager;
@@ -23,7 +24,7 @@ public class RetrofitCreateService extends CreateService {
             .baseUrl(API_SERVER)
             .addConverterFactory(ApiConverterFactory.create())
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-            .client(OkHttpManager.getApiOkHttpClient())
+            .client(ApiHelper.client())
             .build();
     @Override
     public <T> T create(Class<T> service) {

@@ -1,14 +1,18 @@
 package wang.leal.ahel.http.api;
 
+import wang.leal.ahel.http.api.config.ApiConfig;
 import wang.leal.ahel.http.api.service.CancelService;
 import wang.leal.ahel.http.api.service.GetService;
 import wang.leal.ahel.http.api.service.PostService;
 
 /**
- * Base Api
+ * Api
  * Created by wang leal on 16/5/29.
  */
 public final class Api {
+    public static void initialize(ApiConfig config){
+        ApiHelper.setApiConfig(config);
+    }
 
     public static  <T> T create(Class<T> clazz){
         return ApiHelper.createService().create(clazz);
