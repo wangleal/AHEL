@@ -55,7 +55,7 @@ ext {
     libraryName = 'http'
     libraryDescription = 'The http library base on okhttp and retrofit.'
     siteUrl = 'https://github.com/wangleal/AHEL'
-    gitUrl = 'https://github.com/wangleal/AHEL'
+    gitUrl = 'https://github.com/wangleal/AHEL.git'
 
     developerId = 'wangleal'
     developerName = 'wangleal'
