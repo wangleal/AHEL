@@ -49,27 +49,4 @@ dependencies {
     implementation 'com.squareup.retrofit2:adapter-rxjava2:2.4.0'
 }
 
-ext {
-    bintrayRepo = 'AHEL'
-    bintrayName = 'http'
-
-    publishedGroupId = 'wang.leal.ahel'
-    artifact = 'http'
-    libraryVersion = '0.0.1'
-
-    libraryName = 'http'
-    libraryDescription = 'The http library base on okhttp and retrofit.'
-    siteUrl = 'https://github.com/wangleal/AHEL'
-    gitUrl = 'https://github.com/wangleal/AHEL.git'
-
-    developerId = 'wangleal'
-    developerName = 'wangleal'
-    developerEmail = 'wang.leal.ss@gmail.com'
-
-    licenseName = 'The Apache Software License, Version 2.0'
-    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-    allLicenses = ["Apache-2.0"]
-}
-
-apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/bintrayv1.gradle'
-apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/installv1.gradle'
+apply from: 'bintray.gradle'
