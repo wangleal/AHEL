@@ -1,6 +1,6 @@
 package wang.leal.ahel.http.api.observable;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import java.io.IOException;
 
