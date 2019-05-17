@@ -46,11 +46,65 @@ class RetrofitPresenter implements HttpPresenter{
 
     @Override
     public void get() {
+        Api.get("http://test.leal.wang/a")
+                .header("a","a")
+                .observable(TestA.class)
+                .compose(new IOToMainTransform<>())
+                .subscribe(new ApiObserver<TestA>() {
+                    @Override
+                    protected void onSuccess(TestA data) {
+                        infoView.showInfo("success:"+data.a);
+                    }
 
+                    @Override
+                    protected void onApiError(int errNo, String errMsg, String data) {
+                        infoView.showInfo("api error:\r\n"+"errno:"+errNo+",message:"+errMsg+",data:"+data);
+                    }
+
+                    @Override
+                    protected void onFailure(Throwable e) {
+                        StringWriter stringWriter = new StringWriter();
+                        PrintWriter printWriter = new PrintWriter(stringWriter);
+                        e.printStackTrace(printWriter);
+                        infoView.showInfo("failure:"+stringWriter.toString());
+                    }
+
+                    @Override
+                    protected void onFinal() {
+                        infoView.showInfo("\r\nfinal");
+                    }
+                });
     }
 
     @Override
     public void post() {
+        Api.post("http://test.leal.wang/a")
+                .header("a","a")
+                .observable(TestA.class)
+                .compose(new IOToMainTransform<>())
+                .subscribe(new ApiObserver<TestA>() {
+                    @Override
+                    protected void onSuccess(TestA data) {
+                        infoView.showInfo("success:"+data.a);
+                    }
 
+                    @Override
+                    protected void onApiError(int errNo, String errMsg, String data) {
+                        infoView.showInfo("api error:\r\n"+"errno:"+errNo+",message:"+errMsg+",data:"+data);
+                    }
+
+                    @Override
+                    protected void onFailure(Throwable e) {
+                        StringWriter stringWriter = new StringWriter();
+                        PrintWriter printWriter = new PrintWriter(stringWriter);
+                        e.printStackTrace(printWriter);
+                        infoView.showInfo("failure:"+stringWriter.toString());
+                    }
+
+                    @Override
+                    protected void onFinal() {
+                        infoView.showInfo("\r\nfinal");
+                    }
+                });
     }
 }

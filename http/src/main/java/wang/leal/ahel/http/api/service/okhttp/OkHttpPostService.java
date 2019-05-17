@@ -58,7 +58,7 @@ public class OkHttpPostService extends PostService {
             String json = GsonManager.gson().toJson(body);
             requestBody = RequestBody.create(MediaType.parse("application/json"),json);
         }else {
-            if (fieldMap.size()>0&&fileList.size()==0){
+            if (fileList.size()==0){
                 FormBody.Builder bodyBuilder = new FormBody.Builder();
                 for (Map.Entry<String,String> fieldEntry:fieldMap.entrySet()){
                     if (fieldEntry!=null){
@@ -97,7 +97,7 @@ public class OkHttpPostService extends PostService {
                     if (response.body()!=null){
                         json = response.body().string();
                     }
-                    ResponseHelper.dealResult(json,clazz);
+                    return ResponseHelper.dealResult(json,clazz);
                 }else {
                     String body = "";
                     if (response.body()!=null){

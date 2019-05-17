@@ -9,6 +9,7 @@ import wang.leal.ahel.http.api.service.CancelService;
 import wang.leal.ahel.http.api.service.GetService;
 import wang.leal.ahel.http.api.service.PostService;
 import wang.leal.ahel.http.api.service.ServiceFactory;
+import wang.leal.ahel.http.api.service.okhttp.OkHttpServiceFactory;
 import wang.leal.ahel.http.api.service.retrofit.RetrofitServiceFactory;
 
 public class ApiService {
@@ -18,6 +19,11 @@ public class ApiService {
 
     void setApiConfig(ApiConfig apiConfig){
         ApiService.apiConfig = apiConfig;
+        if (apiConfig.type()!=null&&apiConfig.type()== ApiConfig.Type.OKHTTP){
+            serviceFactory = new OkHttpServiceFactory();
+        }else {
+            serviceFactory = new RetrofitServiceFactory();
+        }
     }
 
     public <T> T create(Class<T> clazz){
