@@ -15,7 +15,7 @@ import wang.leal.ahel.http.api.service.retrofit.RetrofitServiceFactory;
  * Created by wang leal on 2017/12/7.
  */
 
-public final class ApiHelper {
+final class ApiHelper {
     private static ServiceFactory serviceFactory = new RetrofitServiceFactory();
     private static ApiConfig apiConfig = new ApiConfig.Builder().build();
 
