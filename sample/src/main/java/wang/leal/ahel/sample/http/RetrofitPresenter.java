@@ -15,7 +15,8 @@ class RetrofitPresenter implements HttpPresenter{
 
     @Override
     public void create() {
-        Api.create(TestService.class)
+        Api.baseUrl("http://test.leal.wang/")
+                .create(TestService.class)
                 .getA()
                 .compose(new IOToMainTransform<>())
                 .subscribe(new ApiObserver<TestA>() {

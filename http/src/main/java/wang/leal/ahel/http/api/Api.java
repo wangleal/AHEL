@@ -2,6 +2,7 @@ package wang.leal.ahel.http.api;
 
 import wang.leal.ahel.http.api.config.ApiConfig;
 import wang.leal.ahel.http.api.service.CancelService;
+import wang.leal.ahel.http.api.service.CreateService;
 import wang.leal.ahel.http.api.service.GetService;
 import wang.leal.ahel.http.api.service.PostService;
 
@@ -12,6 +13,10 @@ import wang.leal.ahel.http.api.service.PostService;
 public final class Api {
     public static void initialize(ApiConfig config){
         ApiHelper.setApiConfig(config);
+    }
+
+    public static CreateService baseUrl(String baseUrl){
+        return ApiHelper.createService().baseUrl(baseUrl);
     }
 
     public static  <T> T create(Class<T> clazz){
