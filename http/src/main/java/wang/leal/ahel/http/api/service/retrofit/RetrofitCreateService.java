@@ -1,5 +1,7 @@
 package wang.leal.ahel.http.api.service.retrofit;
 
+import android.text.TextUtils;
+
 import wang.leal.ahel.http.api.ApiHelper;
 import wang.leal.ahel.http.api.service.CreateService;
 import wang.leal.ahel.http.api.service.retrofit.converter.ApiConverterFactory;
@@ -15,16 +17,26 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
  */
 
 public class RetrofitCreateService extends CreateService {
-    private static final String API_SERVER = "https://api.leal.wang";
+    private static Retrofit retrofit;
 
-    private static Retrofit retrofit =  new Retrofit.Builder()
-            .baseUrl(API_SERVER)
-            .addConverterFactory(ApiConverterFactory.create())
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-            .client(ApiHelper.client())
-            .build();
+    public RetrofitCreateService(){
+        if (retrofit==null){
+            synchronized (RetrofitCreateService.class){
+                if (retrofit==null){
+                    retrofit =  new Retrofit.Builder()
+                            .baseUrl(ApiHelper.baseUrl())
+                            .addConverterFactory(ApiConverterFactory.create())
+                            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                            .client(ApiHelper.client())
+                            .build();
+                }
+            }
+        }
+        if (TextUtils.isEmpty(baseUrl)){
+            baseUrl = ApiHelper.baseUrl();
+        }
+    }
 
-    private String baseUrl = API_SERVER;
     @Override
     public CreateService baseUrl(String baseUrl) {
         this.baseUrl = baseUrl;

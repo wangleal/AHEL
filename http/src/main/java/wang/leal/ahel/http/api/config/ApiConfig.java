@@ -1,16 +1,21 @@
 package wang.leal.ahel.http.api.config;
 
+import android.text.TextUtils;
+
 import okhttp3.OkHttpClient;
 import wang.leal.ahel.http.okhttp.OkHttpManager;
 
 public class ApiConfig {
+    public static final String BASE_URL = "http://api.leal.wang";
     private OkHttpClient okHttpClient;
     private Result result;
     private Type type;
+    private String baseUrl;//全局默认baseUrl
     private ApiConfig(Builder builder){
         this.okHttpClient = builder.okHttpClient;
         this.result = builder.result;
         this.type = builder.type;
+        this.baseUrl = builder.baseUrl;
     }
 
     public OkHttpClient client(){
@@ -21,6 +26,10 @@ public class ApiConfig {
         return result;
     }
 
+    public String baseUrl(){
+        return baseUrl;
+    }
+
     public Type type() {
         return type;
     }
@@ -29,6 +38,7 @@ public class ApiConfig {
         private OkHttpClient okHttpClient;
         private Result result;
         private Type type;
+        private String baseUrl;
 
         public Builder client(OkHttpClient okHttpClient){
             this.okHttpClient = okHttpClient;
@@ -51,6 +61,11 @@ public class ApiConfig {
             return this;
         }
 
+        public Builder baseUrl(String baseUrl){
+            this.baseUrl = baseUrl;
+            return this;
+        }
+
         public ApiConfig build(){
             if (this.result==null){
                 this.result = new Result("code","message","data",0);
@@ -60,6 +75,9 @@ public class ApiConfig {
             }
             if (this.okHttpClient==null){
                 this.okHttpClient = OkHttpManager.getApiOkHttpClient();
+            }
+            if (TextUtils.isEmpty(baseUrl)){
+                this.baseUrl = BASE_URL;
             }
             return new ApiConfig(this);
         }

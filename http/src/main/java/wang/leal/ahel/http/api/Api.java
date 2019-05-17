@@ -11,6 +11,11 @@ import wang.leal.ahel.http.api.service.PostService;
  * Created by wang leal on 16/5/29.
  */
 public final class Api {
+    /**
+     * 此方法可以不调用，有默认实现
+     * 如果需要自定义配置，必须在第一次网络请求之前调用，否则配置不生效，网络请求仍然会使用默认的配置。
+     * @param config    自定义配置
+     */
     public static void initialize(ApiConfig config){
         ApiHelper.setApiConfig(config);
     }

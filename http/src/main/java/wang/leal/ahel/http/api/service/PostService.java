@@ -15,6 +15,7 @@ import io.reactivex.Observable;
  */
 
 public abstract class PostService {
+    protected String baseUrl;//本次请求的baseUrl
 
     protected String url;
     protected Map<String,String> headerMap = new HashMap<>();

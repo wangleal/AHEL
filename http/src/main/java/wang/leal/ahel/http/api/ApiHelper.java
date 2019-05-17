@@ -40,6 +40,10 @@ public final class ApiHelper {
         return apiConfig.result();
     }
 
+    public static String baseUrl(){
+        return apiConfig.baseUrl();
+    }
+
     static CreateService createService(){
         return serviceFactory.createService();
     }
