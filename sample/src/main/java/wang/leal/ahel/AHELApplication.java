@@ -12,6 +12,6 @@ public class AHELApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        Api.initialize(new ApiConfig.Builder().client(OkHttpManager.getApiOkHttpClient(BuildConfig.DEBUG)).result(new Result("code","message","data",0)).type(ApiConfig.Type.RETROFIT).build());
+        Api.initialize(new ApiConfig.Builder().client(OkHttpManager.getApiOkHttpClient()).result(new Result("code","message","data",0)).type(ApiConfig.Type.RETROFIT).build());
     }
 }

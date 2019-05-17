@@ -1,11 +1,13 @@
 package wang.leal.ahel.sample;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import wang.leal.ahel.R;
+import wang.leal.ahel.sample.http.HttpActivity;
 
 public class SampleActivity extends AppCompatActivity {
 
@@ -13,5 +15,6 @@ public class SampleActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sample);
+        findViewById(R.id.bt_http).setOnClickListener(v-> startActivity(new Intent(SampleActivity.this, HttpActivity.class)));
     }
 }

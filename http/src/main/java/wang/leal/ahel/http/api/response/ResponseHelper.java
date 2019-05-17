@@ -8,22 +8,54 @@ import java.lang.reflect.Type;
 
 import wang.leal.ahel.http.api.ApiHelper;
 import wang.leal.ahel.http.api.exception.ApiException;
+import wang.leal.ahel.http.api.exception.ResponseException;
 import wang.leal.ahel.http.json.GsonManager;
 
 public class ResponseHelper {
-    public static <T> T dealResult(String json, Type type) throws ApiException{
+    public static <T> T dealResult(String json, Type type) throws ApiException,ResponseException{
         Gson gson = GsonManager.gson();
         if (ApiHelper.result()==null){
             return gson.fromJson(json,type);
         }else {
             JsonParser jsonParser = GsonManager.jsonParser();
-            JsonObject jsonObject = jsonParser.parse(json).getAsJsonObject();
-            int code = jsonObject.get(ApiHelper.result().codeField()).getAsInt();
-            String message = jsonObject.get(ApiHelper.result().messageField()).getAsString();
+            JsonObject jsonObject;
+            try {
+                jsonObject = jsonParser.parse(json).getAsJsonObject();
+            }catch (Exception e){
+                throw new ResponseException("Json format error:\r\n"+json);
+            }
+
+            String codeField = ApiHelper.result().codeField();
+            if (!jsonObject.has(codeField)){
+                throw new ResponseException("Response json doesn't have \'"+codeField+"\',Please call Api.initialize() to assign code field,or consulting with server developer to add \'"+codeField+"\'.");
+            }
+            int code;
+            try {
+                code = jsonObject.get(codeField).getAsInt();
+            }catch (Exception e){
+                throw new ResponseException(codeField+" value must be integer:"+jsonObject.get(codeField).toString());
+            }
+
+            String messageField = ApiHelper.result().messageField();
+            if (!jsonObject.has(messageField)){
+                throw new ResponseException("Response json doesn't have \'"+messageField+"\',Please call Api.initialize() to assign message field,or consulting with server developer to add \'"+messageField+"\'.");
+            }
+            String message;
+            try {
+                message = jsonObject.get(messageField).getAsString();
+            }catch (Exception e){
+                throw new ResponseException(messageField+" value must be string\r\n"+jsonObject.get(messageField));
+            }
+
+            String dataField = ApiHelper.result().dataField();
+            if (!jsonObject.has(dataField)){
+                throw new ResponseException("Response json doesn't have \'"+dataField+"\',Please call Api.initialize() to assign data field,or consulting with server developer to add \'"+dataField+"\'.");
+            }
+            String data = jsonObject.get(dataField).toString();
             if (code==ApiHelper.successCode()){
-                return gson.fromJson(jsonObject.get(ApiHelper.result().dataField()),type);
+                return gson.fromJson(data,type);
             }else {
-                throw new ApiException(code, message,json);
+                throw new ApiException(code, message,data);
             }
         }
     }

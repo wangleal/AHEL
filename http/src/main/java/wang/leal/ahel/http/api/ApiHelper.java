@@ -17,7 +17,7 @@ import wang.leal.ahel.http.api.service.retrofit.RetrofitServiceFactory;
 
 public final class ApiHelper {
     private static ServiceFactory serviceFactory = new RetrofitServiceFactory();
-    private static ApiConfig apiConfig;
+    private static ApiConfig apiConfig = new ApiConfig.Builder().build();
 
     static void setApiConfig(ApiConfig apiConfig){
         ApiHelper.apiConfig = apiConfig;

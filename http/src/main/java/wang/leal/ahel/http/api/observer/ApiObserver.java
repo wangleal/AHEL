@@ -37,7 +37,7 @@ public abstract class ApiObserver<T> implements Observer<T> {
         try {
             if (e instanceof ApiException){
                 ApiException apiError = (ApiException) e;
-                onApiError(apiError.getCode(),apiError.getMessage(),apiError.getBody());
+                onApiError(apiError.getCode(),apiError.getMessage(),apiError.getData());
             }else {
                 onFailure(e);
             }

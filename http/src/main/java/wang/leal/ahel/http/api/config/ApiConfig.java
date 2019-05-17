@@ -1,6 +1,7 @@
 package wang.leal.ahel.http.api.config;
 
 import okhttp3.OkHttpClient;
+import wang.leal.ahel.http.okhttp.OkHttpManager;
 
 public class ApiConfig {
     private OkHttpClient okHttpClient;
@@ -51,6 +52,15 @@ public class ApiConfig {
         }
 
         public ApiConfig build(){
+            if (this.result==null){
+                this.result = new Result("code","message","data",0);
+            }
+            if (this.type==null){
+                this.type = Type.RETROFIT;
+            }
+            if (this.okHttpClient==null){
+                this.okHttpClient = OkHttpManager.getApiOkHttpClient();
+            }
             return new ApiConfig(this);
         }
     }
