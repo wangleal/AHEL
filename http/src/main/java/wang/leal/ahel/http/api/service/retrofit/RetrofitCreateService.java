@@ -2,7 +2,7 @@ package wang.leal.ahel.http.api.service.retrofit;
 
 import android.text.TextUtils;
 
-import wang.leal.ahel.http.api.ApiHelper;
+import wang.leal.ahel.http.api.ApiService;
 import wang.leal.ahel.http.api.service.CreateService;
 import wang.leal.ahel.http.api.service.retrofit.converter.ApiConverterFactory;
 
@@ -24,27 +24,28 @@ public class RetrofitCreateService extends CreateService {
             synchronized (RetrofitCreateService.class){
                 if (retrofit==null){
                     retrofit =  new Retrofit.Builder()
-                            .baseUrl(ApiHelper.baseUrl())
+                            .baseUrl(ApiService.baseUrl())
                             .addConverterFactory(ApiConverterFactory.create())
                             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                            .client(ApiHelper.client())
+                            .client(ApiService.client())
                             .build();
                 }
             }
         }
-        if (TextUtils.isEmpty(baseUrl)){
-            baseUrl = ApiHelper.baseUrl();
-        }
-    }
-
-    @Override
-    public CreateService baseUrl(String baseUrl) {
-        this.baseUrl = baseUrl;
-        return this;
     }
 
     @Override
     public <T> T create(Class<T> service) {
+        String baseUrl = ApiService.baseUrl();
+        try {
+            Field field = service.getDeclaredField("BASE_URL");
+            field.setAccessible(true);
+            baseUrl = (String) field.get(service);
+        } catch (Exception ignored) {
+        }
+        if (TextUtils.isEmpty(baseUrl)){
+            baseUrl = ApiService.baseUrl();
+        }
         HttpUrl httpUrl = HttpUrl.parse(baseUrl);
         try {
             Field field = retrofit.getClass().getDeclaredField("baseUrl");

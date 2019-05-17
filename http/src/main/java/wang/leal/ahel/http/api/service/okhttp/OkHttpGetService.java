@@ -1,19 +1,17 @@
 package wang.leal.ahel.http.api.service.okhttp;
 
-import wang.leal.ahel.http.api.ApiHelper;
+import wang.leal.ahel.http.api.ApiService;
 import wang.leal.ahel.http.api.observable.CallExecuteObservable;
 import wang.leal.ahel.http.api.observable.ExceptionObservable;
 import wang.leal.ahel.http.api.response.ResponseHelper;
 import wang.leal.ahel.http.api.service.GetService;
 import wang.leal.ahel.http.exception.HttpException;
-import wang.leal.ahel.http.okhttp.OkHttpManager;
 
 import java.util.Map;
 
 import io.reactivex.Observable;
 import okhttp3.Call;
 import okhttp3.HttpUrl;
-import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
@@ -51,7 +49,7 @@ public class OkHttpGetService extends GetService {
         }
 
         Request request = builder.get().build();
-        Call call = ApiHelper.client().newCall(request);
+        Call call = ApiService.client().newCall(request);
         Observable<Response> responseObservable = new CallExecuteObservable(call);
         return  responseObservable.map(response -> {
             if (response!=null){

@@ -7,7 +7,6 @@ import wang.leal.ahel.http.json.GsonManager;
 import java.util.Map;
 
 import io.reactivex.Observable;
-import io.reactivex.functions.Function;
 import retrofit2.http.GET;
 import retrofit2.http.HeaderMap;
 import retrofit2.http.QueryMap;

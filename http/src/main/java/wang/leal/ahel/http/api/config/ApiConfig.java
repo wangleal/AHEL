@@ -1,12 +1,9 @@
 package wang.leal.ahel.http.api.config;
 
-import android.text.TextUtils;
-
 import okhttp3.OkHttpClient;
 import wang.leal.ahel.http.okhttp.OkHttpManager;
 
 public class ApiConfig {
-    public static final String BASE_URL = "http://api.leal.wang";
     private OkHttpClient okHttpClient;
     private Result result;
     private Type type;
@@ -75,9 +72,6 @@ public class ApiConfig {
             }
             if (this.okHttpClient==null){
                 this.okHttpClient = OkHttpManager.getApiOkHttpClient();
-            }
-            if (TextUtils.isEmpty(baseUrl)){
-                this.baseUrl = BASE_URL;
             }
             return new ApiConfig(this);
         }

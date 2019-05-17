@@ -1,6 +1,6 @@
 package wang.leal.ahel.http.api.service.okhttp;
 
-import wang.leal.ahel.http.api.ApiHelper;
+import wang.leal.ahel.http.api.ApiService;
 import wang.leal.ahel.http.api.observable.CallExecuteObservable;
 import wang.leal.ahel.http.api.observable.ExceptionObservable;
 import wang.leal.ahel.http.api.response.ResponseHelper;
@@ -88,7 +88,7 @@ public class OkHttpPostService extends PostService {
         }
 
         Request request = builder.post(requestBody).build();
-        Call call = ApiHelper.client().newCall(request);
+        Call call = ApiService.client().newCall(request);
         Observable<Response> responseObservable = new CallExecuteObservable(call);
         return  responseObservable.map(response -> {
             if (response!=null){
