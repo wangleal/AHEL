@@ -7,7 +7,6 @@ import wang.leal.ahel.http.json.GsonManager;
 import java.util.Map;
 
 import io.reactivex.Observable;
-import io.reactivex.functions.Function;
 import retrofit2.http.GET;
 import retrofit2.http.HeaderMap;
 import retrofit2.http.QueryMap;
@@ -27,12 +26,7 @@ public class RetrofitGetService extends GetService {
     public <T> Observable<T> observable(final Class<T> clazz) {
         Observable<String> stringObservable = Api.create(GetApi.class)
                 .get(url,headerMap,queryMap);
-        return stringObservable.map(new Function<String, T>() {
-            @Override
-            public T apply(String s) throws Exception {
-                return GsonManager.gson().fromJson(s,clazz);
-            }
-        });
+        return stringObservable.map(s -> GsonManager.gson().fromJson(s,clazz));
     }
 
     public interface GetApi{

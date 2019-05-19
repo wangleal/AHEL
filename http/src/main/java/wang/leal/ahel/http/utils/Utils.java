@@ -33,10 +33,6 @@ public final class Utils {
         // No instances.
     }
 
-    public static boolean isDebug(){
-        return BuildConfig.DEBUG;
-    }
-
     public static String md5(String msg){
         try
         {

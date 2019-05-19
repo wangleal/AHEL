@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.InstanceCreator;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.TypeAdapter;
@@ -32,6 +33,7 @@ import java.util.Map;
 public class GsonManager {
 
     private static Gson defaultGson;
+    private static JsonParser jsonParser = new JsonParser();
 
     /**
      * 自定义TypeAdapter ,null对象将被解析成空字符串
@@ -326,4 +328,7 @@ public class GsonManager {
         return defaultGson;
     }
 
+    public static JsonParser jsonParser(){
+        return jsonParser;
+    }
 }

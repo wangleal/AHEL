@@ -8,12 +8,12 @@ public class ApiException extends RuntimeException {
 
     private int code;
     private String message;
-    private String body;
+    private String data;
     public ApiException(int code, String message,String body){
-        super("code:"+code+"\r\n"+"message:"+message+"\r\n"+"body:"+body);
+        super("code:"+code+"\r\n"+"message:"+message+"\r\n"+"data:"+body);
         this.code = code;
         this.message = message;
-        this.body = body;
+        this.data = body;
     }
 
     public int getCode() {
@@ -25,7 +25,7 @@ public class ApiException extends RuntimeException {
         return message;
     }
 
-    public String getBody() {
-        return body;
+    public String getData() {
+        return data;
     }
 }

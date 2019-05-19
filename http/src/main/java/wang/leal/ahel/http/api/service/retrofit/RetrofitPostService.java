@@ -35,12 +35,7 @@ public class RetrofitPostService extends PostService {
 
     @Override
     public <T> Observable<T> observable(final Class<T> clazz) {
-        Function<String,T> function = new Function<String, T>() {
-            @Override
-            public T apply(String s) throws Exception {
-                return GsonManager.gson().fromJson(s,clazz);
-            }
-        };
+        Function<String,T> function = s -> GsonManager.gson().fromJson(s,clazz);
 
         if (body!=null){
             Observable<String> stringObservable = Api.create(PostApi.class).body(url,headerMap,body,queryMap);

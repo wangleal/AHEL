@@ -2,9 +2,9 @@ package wang.leal.ahel.http.api.service.retrofit;
 
 import android.text.TextUtils;
 
+import wang.leal.ahel.http.api.ApiService;
 import wang.leal.ahel.http.api.service.CreateService;
 import wang.leal.ahel.http.api.service.retrofit.converter.ApiConverterFactory;
-import wang.leal.ahel.http.okhttp.OkHttpManager;
 
 import java.lang.reflect.Field;
 
@@ -17,17 +17,26 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
  */
 
 public class RetrofitCreateService extends CreateService {
-    private static final String API_SERVER = "https://api.github.com";
+    private static Retrofit retrofit;
 
-    private static Retrofit retrofit =  new Retrofit.Builder()
-            .baseUrl(API_SERVER)
-            .addConverterFactory(ApiConverterFactory.create())
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-            .client(OkHttpManager.getApiOkHttpClient())
-            .build();
+    public RetrofitCreateService(){
+        if (retrofit==null){
+            synchronized (RetrofitCreateService.class){
+                if (retrofit==null){
+                    retrofit =  new Retrofit.Builder()
+                            .baseUrl(ApiService.baseUrl())
+                            .addConverterFactory(ApiConverterFactory.create())
+                            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                            .client(ApiService.client())
+                            .build();
+                }
+            }
+        }
+    }
+
     @Override
     public <T> T create(Class<T> service) {
-        String baseUrl = API_SERVER;
+        String baseUrl = ApiService.baseUrl();
         try {
             Field field = service.getDeclaredField("BASE_URL");
             field.setAccessible(true);
@@ -35,7 +44,7 @@ public class RetrofitCreateService extends CreateService {
         } catch (Exception ignored) {
         }
         if (TextUtils.isEmpty(baseUrl)){
-            baseUrl = API_SERVER;
+            baseUrl = ApiService.baseUrl();
         }
         HttpUrl httpUrl = HttpUrl.parse(baseUrl);
         try {

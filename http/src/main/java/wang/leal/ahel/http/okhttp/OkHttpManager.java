@@ -4,7 +4,6 @@ import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
-import wang.leal.ahel.http.utils.Utils;
 
 /**
  * OkHttpManager
@@ -12,70 +11,45 @@ import wang.leal.ahel.http.utils.Utils;
  */
 public class OkHttpManager {
 
-    private static OkHttpClient apiOkHttpClient;
-
-    private static OkHttpClient downloadHttpClient;
-
-    private static OkHttpClient uploadHttpClient;
-
     public static OkHttpClient getApiOkHttpClient(){
-        if (apiOkHttpClient ==null){
-            synchronized (OkHttpManager.class){
-                if (apiOkHttpClient==null){
-                    OkHttpClient.Builder builder = new OkHttpClient.Builder();
-                    //设定30秒超时
-                    builder.connectTimeout(30, TimeUnit.SECONDS);
-                    builder.readTimeout(30,TimeUnit.SECONDS);
-                    builder.writeTimeout(30,TimeUnit.SECONDS);
-                    HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
-                    httpLoggingInterceptor.setLevel(Utils.isDebug()?HttpLoggingInterceptor.Level.BODY: HttpLoggingInterceptor.Level.NONE);
-                    builder.addNetworkInterceptor(httpLoggingInterceptor);
-                    //构建OKHttpClient
-                    apiOkHttpClient = builder.build();
-                }
-            }
-        }
-        return apiOkHttpClient;
+        OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        //设定30秒超时
+        builder.connectTimeout(30, TimeUnit.SECONDS);
+        builder.readTimeout(30,TimeUnit.SECONDS);
+        builder.writeTimeout(30,TimeUnit.SECONDS);
+        builder.cookieJar(new DefaultCookieJar());
+        HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
+        httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        builder.addNetworkInterceptor(httpLoggingInterceptor);
+        //构建OKHttpClient
+        return builder.build();
     }
 
-    public static OkHttpClient getUploadOkHttpClient(){
-        if (uploadHttpClient==null){
-            synchronized (OkHttpManager.class){
-                if (uploadHttpClient==null){
-                    OkHttpClient.Builder builder = new OkHttpClient.Builder();
-                    //设定30秒超时
-                    builder.connectTimeout(30, TimeUnit.SECONDS);
-                    builder.readTimeout(30,TimeUnit.SECONDS);
-                    builder.writeTimeout(30,TimeUnit.SECONDS);
-                    HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
-                    httpLoggingInterceptor.setLevel(Utils.isDebug()?HttpLoggingInterceptor.Level.HEADERS: HttpLoggingInterceptor.Level.NONE);
-                    builder.addNetworkInterceptor(httpLoggingInterceptor);
-                    //构建OKHttpClient
-                    uploadHttpClient = builder.build();
-                }
-            }
-
-        }
-        return uploadHttpClient;
+    public static OkHttpClient getUploadOkHttpClient(boolean isShowLog){
+        OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        //设定30秒超时
+        builder.connectTimeout(60, TimeUnit.SECONDS);
+        builder.readTimeout(60,TimeUnit.SECONDS);
+        builder.writeTimeout(60,TimeUnit.SECONDS);
+        builder.cookieJar(new DefaultCookieJar());
+        HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
+        httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.HEADERS);
+        builder.addNetworkInterceptor(httpLoggingInterceptor);
+        //构建OKHttpClient
+        return builder.build();
     }
 
-    public static OkHttpClient getDownloadOkHttpClient(){
-        if (downloadHttpClient==null){
-            synchronized (OkHttpManager.class){
-                if (downloadHttpClient==null){
-                    OkHttpClient.Builder builder = new OkHttpClient.Builder();
-                    //设定30秒超时
-                    builder.connectTimeout(30, TimeUnit.SECONDS);
-                    builder.readTimeout(30,TimeUnit.SECONDS);
-                    builder.writeTimeout(30,TimeUnit.SECONDS);
-                    HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
-                    httpLoggingInterceptor.setLevel(Utils.isDebug()?HttpLoggingInterceptor.Level.HEADERS: HttpLoggingInterceptor.Level.NONE);
-                    builder.addNetworkInterceptor(httpLoggingInterceptor);
-                    //构建OKHttpClient
-                    downloadHttpClient = builder.build();
-                }
-            }
-        }
-        return downloadHttpClient;
+    public static OkHttpClient getDownloadOkHttpClient(boolean isShowLog){
+        OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        //设定30秒超时
+        builder.connectTimeout(60*2, TimeUnit.SECONDS);
+        builder.readTimeout(60*2,TimeUnit.SECONDS);
+        builder.writeTimeout(60*2,TimeUnit.SECONDS);
+        builder.cookieJar(new DefaultCookieJar());
+        HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
+        httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.HEADERS);
+        builder.addNetworkInterceptor(httpLoggingInterceptor);
+        //构建OKHttpClient
+        return builder.build();
     }
 }

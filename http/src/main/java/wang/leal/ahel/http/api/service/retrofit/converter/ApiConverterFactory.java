@@ -1,6 +1,5 @@
 package wang.leal.ahel.http.api.service.retrofit.converter;
 
-import com.google.gson.Gson;
 import wang.leal.ahel.http.json.GsonManager;
 
 import java.lang.annotation.Annotation;
@@ -29,9 +28,8 @@ import retrofit2.http.QueryMap;
  */
 public class ApiConverterFactory extends Converter.Factory{
 
-    private static final Gson gson = GsonManager.gson();
     private static final ScalarsConverterFactory scalarsConverterFactory = ScalarsConverterFactory.create();
-    private static final GsonConverterFactory gsonConvertFactory = GsonConverterFactory.create(gson);
+    private static final GsonConverterFactory gsonConvertFactory = GsonConverterFactory.create(GsonManager.gson());
 
     public static ApiConverterFactory create(){
         return new ApiConverterFactory();
@@ -45,7 +43,7 @@ public class ApiConverterFactory extends Converter.Factory{
      */
     public Converter<ResponseBody, ?> responseBodyConverter(Type type, Annotation[] annotations,
                                                             Retrofit retrofit) {
-        return new ApiResponseConverter<>(gson, type);
+        return new ApiResponseConverter<>(type);
     }
 
     /**
