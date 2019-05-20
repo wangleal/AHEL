@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import wang.leal.ahel.R;
 import wang.leal.ahel.sample.http.HttpActivity;
+import wang.leal.ahel.sample.utils.UtilsActivity;
 
 public class SampleActivity extends AppCompatActivity {
 
@@ -16,5 +17,6 @@ public class SampleActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sample);
         findViewById(R.id.bt_http).setOnClickListener(v-> startActivity(new Intent(SampleActivity.this, HttpActivity.class)));
+        findViewById(R.id.bt_utils).setOnClickListener(v -> startActivity(new Intent(SampleActivity.this, UtilsActivity.class)));
     }
 }

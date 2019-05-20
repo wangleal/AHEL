@@ -19,5 +19,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".sample.http.HttpActivity" />
+        <activity android:name=".sample.utils.UtilsActivity" />
     </application>
 </manifest>
