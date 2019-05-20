@@ -1,8 +1,11 @@
 package wang.leal.ahel.http.api.service.retrofit;
 
+import com.google.gson.Gson;
+
 import wang.leal.ahel.http.api.Api;
+import wang.leal.ahel.http.api.response.Origin;
 import wang.leal.ahel.http.api.service.GetService;
-import wang.leal.ahel.http.json.GsonManager;
+import wang.leal.ahel.http.json.gson.GsonManager;
 
 import java.util.Map;
 
@@ -24,13 +27,23 @@ public class RetrofitGetService extends GetService {
 
     @Override
     public <T> Observable<T> observable(final Class<T> clazz) {
-        Observable<String> stringObservable = Api.create(GetApi.class)
-                .get(url,headerMap,queryMap);
-        return stringObservable.map(s -> GsonManager.gson().fromJson(s,clazz));
+        Gson gson = GsonManager.gson();
+        if (Origin.class.isAssignableFrom(clazz)){
+            Observable<Object> originObservable = Api.create(GetApi.class)
+                    .getOrigin(url,headerMap,queryMap);
+            return originObservable.map(origin -> gson.fromJson(gson.toJson(origin),clazz));
+        }else {
+            Observable<String> stringObservable = Api.create(GetApi.class)
+                    .get(url,headerMap,queryMap);
+            return stringObservable.map(s -> gson.fromJson(s,clazz));
+        }
     }
 
     public interface GetApi{
         @GET
         Observable<String> get(@Url String url, @HeaderMap Map<String, String> headerMap, @QueryMap Map<String, String> queryMap);
+
+        @GET
+        Observable<Object> getOrigin(@Url String url, @HeaderMap Map<String, String> headerMap, @QueryMap Map<String, String> queryMap);
     }
 }

@@ -9,12 +9,12 @@ import java.lang.reflect.Type;
 import wang.leal.ahel.http.api.ApiService;
 import wang.leal.ahel.http.api.exception.ApiException;
 import wang.leal.ahel.http.api.exception.ResponseException;
-import wang.leal.ahel.http.json.GsonManager;
+import wang.leal.ahel.http.json.gson.GsonManager;
 
 public class ResponseHelper {
     public static <T> T dealResult(String json, Type type) throws ApiException,ResponseException{
         Gson gson = GsonManager.gson();
-        if (ApiService.result()==null){
+        if (ApiService.result()==null||(type instanceof Class&&Origin.class.isAssignableFrom((Class<?>) type))||Object.class.equals(type)){
             return gson.fromJson(json,type);
         }else {
             JsonParser jsonParser = GsonManager.jsonParser();

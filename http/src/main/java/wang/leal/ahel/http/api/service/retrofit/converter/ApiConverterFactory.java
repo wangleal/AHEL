@@ -1,6 +1,6 @@
 package wang.leal.ahel.http.api.service.retrofit.converter;
 
-import wang.leal.ahel.http.json.GsonManager;
+import wang.leal.ahel.http.json.gson.GsonManager;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;

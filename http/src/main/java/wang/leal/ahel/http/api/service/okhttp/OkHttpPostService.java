@@ -7,7 +7,7 @@ import wang.leal.ahel.http.api.response.ResponseHelper;
 import wang.leal.ahel.http.api.service.PostService;
 import wang.leal.ahel.http.api.service.entity.FileEntity;
 import wang.leal.ahel.http.exception.HttpException;
-import wang.leal.ahel.http.json.GsonManager;
+import wang.leal.ahel.http.json.gson.GsonManager;
 
 import java.io.File;
 import java.util.Map;

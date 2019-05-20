@@ -7,7 +7,7 @@ public class ApiConfig {
     private OkHttpClient okHttpClient;
     private Result result;
     private Type type;
-    private String baseUrl;//全局默认baseUrl
+    private String baseUrl;
     private ApiConfig(Builder builder){
         this.okHttpClient = builder.okHttpClient;
         this.result = builder.result;
@@ -29,6 +29,10 @@ public class ApiConfig {
 
     public Type type() {
         return type;
+    }
+
+    public static Builder createBuilder(){
+        return new Builder();
     }
 
     public final static class Builder{

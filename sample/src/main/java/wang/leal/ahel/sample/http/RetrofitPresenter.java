@@ -107,4 +107,36 @@ class RetrofitPresenter implements HttpPresenter{
                     }
                 });
     }
+
+    @Override
+    public void testOrigin() {
+        Api.post("http://test.leal.wang/a")
+                .header("a","a")
+                .observable(OriginA.class)
+                .compose(new IOToMainTransform<>())
+                .subscribe(new ApiObserver<OriginA>() {
+                    @Override
+                    protected void onSuccess(OriginA data) {
+                        infoView.showInfo("success:"+data.data.a);
+                    }
+
+                    @Override
+                    protected void onApiError(int errNo, String errMsg, String data) {
+                        infoView.showInfo("api error:\r\n"+"errno:"+errNo+",message:"+errMsg+",data:"+data);
+                    }
+
+                    @Override
+                    protected void onFailure(Throwable e) {
+                        StringWriter stringWriter = new StringWriter();
+                        PrintWriter printWriter = new PrintWriter(stringWriter);
+                        e.printStackTrace(printWriter);
+                        infoView.showInfo("failure:"+stringWriter.toString());
+                    }
+
+                    @Override
+                    protected void onFinal() {
+                        infoView.showInfo("\r\nfinal");
+                    }
+                });
+    }
 }
