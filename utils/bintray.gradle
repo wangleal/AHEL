@@ -4,10 +4,10 @@ ext{
 
     publishedGroupId = 'wang.leal.ahel'
     artifact = 'utils'
-    libraryVersion = '0.0.1'
+    libraryVersion = '0.0.2'
 
-    libraryName = 'http'
-    libraryDescription = 'The http library base on okhttp and retrofit.'
+    libraryName = 'utils'
+    libraryDescription = 'The android utils.'
     siteUrl = 'https://github.com/wangleal/AHEL'
     gitUrl = 'https://github.com/wangleal/AHEL.git'
 
