@@ -15,6 +15,15 @@ public abstract class GetService {
     protected Map<String,String> headerMap = new HashMap<>();
     protected Map<String,String> queryMap = new HashMap<>();
 
+    /**
+     * 获取Observable<T>
+     * 两种特殊情况：
+     *      1，当参数T为Object的时候，onSuccess返回的是response.body的object对象
+     *      2，当参数T为Origin的子类的时候，onSuccess返回的是response.body的T对象
+     * @param clazz Class
+     * @param <T> T
+     * @return  Observable
+     */
     public abstract <T> Observable<T> observable(Class<T> clazz);
 
     public GetService(String url){

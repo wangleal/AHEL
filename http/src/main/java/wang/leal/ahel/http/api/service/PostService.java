@@ -15,7 +15,6 @@ import io.reactivex.Observable;
  */
 
 public abstract class PostService {
-    protected String baseUrl;//本次请求的baseUrl
 
     protected String url;
     protected Map<String,String> headerMap = new HashMap<>();
@@ -24,6 +23,15 @@ public abstract class PostService {
     protected List<FileEntity> fileList = new ArrayList<>();
     protected Object body;
 
+    /**
+     * 获取Observable<T>
+     * 两种特殊情况：
+     *      1，当参数T为Object的时候，onSuccess返回的是response.body的object对象
+     *      2，当参数T为Origin的子类的时候，onSuccess返回的是response.body的T对象
+     * @param clazz Class
+     * @param <T> T
+     * @return  Observable
+     */
     public abstract <T> Observable<T> observable(Class<T> clazz);
 
     public PostService(String url){

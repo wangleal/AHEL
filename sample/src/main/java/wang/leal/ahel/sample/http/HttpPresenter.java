@@ -5,4 +5,6 @@ interface HttpPresenter {
     void create();
     void get();
     void post();
+
+    void testOrigin();
 }

@@ -9,4 +9,7 @@ public interface TestService {
 
     @GET("a")
     Observable<TestA> getA();
+
+    @GET("a")
+    Observable<OriginA> getAOrigin();
 }
