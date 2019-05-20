@@ -4,7 +4,7 @@ ext{
 
     publishedGroupId = 'wang.leal.ahel'
     artifact = 'utils'
-    libraryVersion = '0.0.2'
+    libraryVersion = '0.0.3'
 
     libraryName = 'utils'
     libraryDescription = 'The android utils.'
@@ -13,7 +13,7 @@ ext{
 
     developerId = 'wangleal'
     developerName = 'wangleal'
-    developerEmail = 'wang.leal.ss@gmail.com'
+    developerEmail = 'wangleal.oss@gmail.com'
 
     licenseName = 'The Apache Software License, Version 2.0'
     licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
