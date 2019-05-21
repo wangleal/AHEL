@@ -26,40 +26,40 @@ public class SharedPreferencesUtil {
         return sharedPreferenceUtil;
     }
 
-    public void putString(String key, String value) {
+    public boolean putString(String key, String value) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(key, value);
-        editor.commit();
+        return editor.commit();
     }
 
-    public void putStringSet(String key, Set<String> stringSet) {
+    public boolean putStringSet(String key, Set<String> stringSet) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putStringSet(key, stringSet);
-        editor.commit();
+        return editor.commit();
     }
 
-    public void putLong(String key, long value) {
+    public boolean putLong(String key, long value) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putLong(key, value);
-        editor.commit();
+        return editor.commit();
     }
 
-    public void putInt(String key, int value) {
+    public boolean putInt(String key, int value) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putInt(key, value);
-        editor.commit();
+        return editor.commit();
     }
 
-    public void putBoolean(String key, boolean value) {
+    public boolean putBoolean(String key, boolean value) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putBoolean(key, value);
-        editor.commit();
+        return editor.commit();
     }
 
-    public void putFloat(String key, float value) {
+    public boolean putFloat(String key, float value) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putFloat(key, value);
-        editor.commit();
+        return editor.commit();
     }
 
     public String getString(String key) {
