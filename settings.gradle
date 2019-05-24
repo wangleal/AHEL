@@ -1,2 +1,2 @@
-include ':http', ':utils'
+include ':http', ':utils', ':hardware'
 include ':sample'
