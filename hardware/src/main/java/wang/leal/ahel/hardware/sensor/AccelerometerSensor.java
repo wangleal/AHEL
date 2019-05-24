@@ -32,6 +32,22 @@ public class AccelerometerSensor {
             float y = event.values[1];
             float z = event.values[2];
             Log.e("AccelerometerSensor","x:"+x+",y:"+y+",z:"+z);
+            float magnitude = x * x + y * y;
+            int orientation;
+            // Don't trust the angle if the magnitude is small compared to the y
+            // value
+            if (magnitude * 4 >= z * z) {
+                float OneEightyOverPi = 57.29577957855f;
+                float angle = (float) Math.atan2(-y, x) * OneEightyOverPi;
+                orientation = 90 - Math.round(angle);
+                // normalize to 0 - 359 range
+                while (orientation >= 360) {
+                    orientation -= 360;
+                }
+                while (orientation < 0) {
+                    orientation += 360;
+                }
+            }
         }
 
         @Override
