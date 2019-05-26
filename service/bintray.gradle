@@ -1,13 +1,13 @@
 ext{
     bintrayRepo = 'AHEL'
-    bintrayName = 'utils'
+    bintrayName = 'service'
 
     publishedGroupId = 'wang.leal.ahel'
-    artifact = 'utils'
-    libraryVersion = '0.0.8'
+    artifact = 'service'
+    libraryVersion = '0.0.2'
 
-    libraryName = 'utils'
-    libraryDescription = 'The android utils.'
+    libraryName = 'service'
+    libraryDescription = 'The android system service.'
     siteUrl = 'https://github.com/wangleal/AHEL'
     gitUrl = 'https://github.com/wangleal/AHEL.git'
 
