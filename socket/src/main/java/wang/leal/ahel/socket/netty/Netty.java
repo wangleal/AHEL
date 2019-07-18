@@ -1,5 +1,8 @@
 package wang.leal.ahel.socket.netty;
 
+import java.lang.ref.WeakReference;
+import java.util.concurrent.TimeUnit;
+
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
@@ -14,12 +17,13 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
+import io.netty.handler.timeout.IdleStateHandler;
 import io.netty.util.CharsetUtil;
 import wang.leal.ahel.socket.IConnection;
 
 public class Netty implements IConnection {
-    private OnMessageReceiveListener onMessageReceiveListener;
     private EventLoopGroup group = new NioEventLoopGroup();
+    private ClientHandler clientHandler = new ClientHandler();
     private Bootstrap bootstrap = new Bootstrap().group(group)
             .option(ChannelOption.TCP_NODELAY, true)
             .option(ChannelOption.TCP_NODELAY, true)
@@ -28,29 +32,10 @@ public class Netty implements IConnection {
             .handler(new ChannelInitializer<SocketChannel>() {
                 @Override
                 protected void initChannel(SocketChannel socketChannel){
-//                    socketChannel.pipeline().addLast(new IdleStateHandler(0, 5, 0, TimeUnit.SECONDS));//5s未发送数据，回调userEventTriggered
+                    socketChannel.pipeline().addLast(new IdleStateHandler(0, 5, 0, TimeUnit.SECONDS));
                     socketChannel.pipeline().addLast(new StringDecoder(CharsetUtil.UTF_8));
                     socketChannel.pipeline().addLast(new StringEncoder(CharsetUtil.UTF_8));
-                    socketChannel.pipeline().addLast(new SimpleChannelInboundHandler<String>() {
-                        @Override
-                        protected void messageReceived(ChannelHandlerContext ctx, String msg) throws Exception {
-                            System.out.println("netty msg:"+msg);
-                            if (onMessageReceiveListener!=null){
-                                onMessageReceiveListener.onMessageReceive(msg);
-                            }
-                        }
-
-                        @Override
-                        public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
-                            super.userEventTriggered(ctx, evt);
-                        }
-
-                        @Override
-                        public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-                            super.exceptionCaught(ctx, cause);
-                            System.out.println("netty exception");
-                        }
-                    });
+                    socketChannel.pipeline().addLast(clientHandler);
                 }
             });
     private ChannelFuture channelFuture;
@@ -70,7 +55,7 @@ public class Netty implements IConnection {
 
     @Override
     public void listen(OnMessageReceiveListener onMessageReceiveListener) {
-        this.onMessageReceiveListener = onMessageReceiveListener;
+        clientHandler.listen(new WeakReference<>(onMessageReceiveListener));
     }
 
     @Override
@@ -89,5 +74,24 @@ public class Netty implements IConnection {
         }
     }
 
+    private static class ClientHandler extends SimpleChannelInboundHandler<String>{
+        WeakReference<OnMessageReceiveListener> listenerWeakReference;
+
+        private void listen(WeakReference<OnMessageReceiveListener> listenerWeakReference){
+            this.listenerWeakReference = listenerWeakReference;
+        }
+
+        @Override
+        protected void messageReceived(ChannelHandlerContext ctx, String msg) throws Exception {
+            if (listenerWeakReference!=null&&listenerWeakReference.get()!=null){
+                listenerWeakReference.get().onMessageReceive(msg);
+            }
+        }
+
+        @Override
+        public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
+            super.userEventTriggered(ctx, evt);
+        }
+    }
 
 }
