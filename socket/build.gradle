@@ -1,12 +1,12 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
 
 
     defaultConfig {
         minSdkVersion 14
-        targetSdkVersion 28
+        targetSdkVersion 29
         versionCode 1
         versionName "1.0"
 
@@ -21,6 +21,12 @@ android {
         }
     }
 
+    packagingOptions {
+        pickFirst 'META-INF/*'
+    }
+//    packagingOptions {
+//        exclude 'META-INF/*'
+//    }
 }
 
 dependencies {
@@ -30,6 +36,9 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+
+    api 'io.netty:netty-transport:5.0.0.Alpha2'
+    api 'io.netty:netty-codec:5.0.0.Alpha2'
 }
 
 apply from: 'bintray.gradle'
