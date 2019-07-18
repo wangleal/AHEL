@@ -4,4 +4,6 @@
     <string name="request">Request</string>
     <string name="utils">Utils</string>
     <string name="sensor">Sensor</string>
+    <string name="socket">Socket</string>
+    <string name="send">发送</string>
 </resources>

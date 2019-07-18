@@ -4,39 +4,30 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <Button
-        android:id="@+id/bt_http"
-        android:layout_width="wrap_content"
+    <EditText
+        android:id="@+id/et_input"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:text="@string/http_capital"/>
-
+        android:layout_marginTop="20dp"
+        />
     <Button
-        android:id="@+id/bt_utils"
+        android:id="@+id/bt_send"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/bt_http"
+        app:layout_constraintTop_toBottomOf="@+id/et_input"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:text="@string/utils"/>
-
-    <Button
-        android:id="@+id/bt_sensor"
-        android:layout_width="wrap_content"
+        android:text="@string/send"
+        />
+    <TextView
+        android:id="@+id/tv_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/bt_utils"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:text="@string/sensor"/>
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
-    <Button
-        android:id="@+id/bt_socket"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/bt_utils"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:text="@string/socket"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

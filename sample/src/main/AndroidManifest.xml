@@ -21,5 +21,6 @@
         <activity android:name=".sample.http.HttpActivity" />
         <activity android:name=".sample.utils.UtilsActivity" />
         <activity android:name=".sample.hardware.SensorActivity" />
+        <activity android:name=".sample.socket.SocketActivity" />
     </application>
 </manifest>
