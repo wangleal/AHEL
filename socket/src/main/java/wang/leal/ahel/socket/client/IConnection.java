@@ -1,4 +1,4 @@
-package wang.leal.ahel.socket;
+package wang.leal.ahel.socket.client;
 
 public interface IConnection {
     void connect(String host, int port);

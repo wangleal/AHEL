@@ -19,7 +19,7 @@ import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
 import io.netty.handler.timeout.IdleStateHandler;
 import io.netty.util.CharsetUtil;
-import wang.leal.ahel.socket.IConnection;
+import wang.leal.ahel.socket.client.IConnection;
 
 public class Netty implements IConnection {
     private EventLoopGroup group = new NioEventLoopGroup();

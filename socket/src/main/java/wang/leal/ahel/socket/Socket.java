@@ -1,45 +1,47 @@
 package wang.leal.ahel.socket;
 
-import wang.leal.ahel.socket.netty.Netty;
+import android.content.Context;
 
-public class Socket implements IConnection.OnMessageReceiveListener {
-    private IConnection connection;
-    private Callback callback;
+import io.reactivex.Flowable;
+import io.reactivex.Observable;
+import wang.leal.ahel.socket.process.Client;
+import wang.leal.ahel.socket.process.Data;
+import wang.leal.ahel.socket.process.MessageType;
 
-    private Socket(IConnection connection){
-        this.connection = connection;
-        this.connection.listen(this);
+public class Socket{
+    private String url;
+    private int port;
+    private Socket(String url,int port){
+        this.url = url;
+        this.port = port;
+    }
+
+    /**
+     * start socket process.init once
+     * @param context context
+     */
+    public static void startProcess(Context context){
+        Client.getInstance().startSocketProcess(context);
+    }
+
+    /**
+     * stop socket process.
+     * @param context context
+     */
+    public static void stopProcess(Context context){
+        Client.getInstance().stopSocketProcess(context);
     }
 
     public static Socket connect(String url,int port){
-        IConnection connection = getConnection();
-        connection.connect(url,port);
-        return new Socket(connection);
+        Client.getInstance().sendMessage(MessageType.CONNECT,new Data(url,port,null));
+        return new Socket(url,port);
     }
 
-    public Socket callback(Callback callback){
-        this.callback = callback;
-        return this;
+    public void disconnect(){
+        Client.getInstance().sendMessage(MessageType.DISCONNECT,new Data(url,port,null));
     }
 
-    public void send(String message){
-        if (connection!=null){
-            connection.sendMessage(message);
-        }
-    }
-
-    private static IConnection getConnection(){
-        return new Netty();
-    }
-
-    @Override
-    public void onMessageReceive(String message) {
-        if (callback!=null){
-            callback.onMessageReceive(message);
-        }
-    }
-
-    public interface Callback {
-        void onMessageReceive(String message);
+    public Flowable<String> registerMessage(){
+        return Client.getInstance().registerMessage(url,port);
     }
 }
