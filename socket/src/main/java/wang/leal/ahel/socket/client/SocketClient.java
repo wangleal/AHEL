@@ -5,8 +5,12 @@ import wang.leal.ahel.socket.netty.Netty;
 public class SocketClient implements IConnection.OnMessageReceiveListener {
     private IConnection connection;
     private Callback callback;
+    private String url;
+    private int port;
 
-    private SocketClient(IConnection connection){
+    private SocketClient(String url,int port,IConnection connection){
+        this.url = url;
+        this.port = port;
         this.connection = connection;
         this.connection.listen(this);
     }
@@ -14,7 +18,7 @@ public class SocketClient implements IConnection.OnMessageReceiveListener {
     public static SocketClient connect(String url, int port){
         IConnection connection = getConnection();
         connection.connect(url,port);
-        return new SocketClient(connection);
+        return new SocketClient(url,port,connection);
     }
 
     public SocketClient callback(Callback callback){
@@ -28,6 +32,10 @@ public class SocketClient implements IConnection.OnMessageReceiveListener {
         }
     }
 
+    public void disconnect(){
+        this.connection.close();
+    }
+
     private static IConnection getConnection(){
         return new Netty();
     }
@@ -35,11 +43,11 @@ public class SocketClient implements IConnection.OnMessageReceiveListener {
     @Override
     public void onMessageReceive(String message) {
         if (callback!=null){
-            callback.onMessageReceive(message);
+            callback.onMessageReceive(this.url,this.port,message);
         }
     }
 
     public interface Callback {
-        void onMessageReceive(String message);
+        void onMessageReceive(String url,int port,String message);
     }
 }

@@ -43,14 +43,18 @@ public class Netty implements IConnection {
 
     @Override
     public void connect(String host, int port){
-        channelFuture = bootstrap.connect(host,port).addListener(new ChannelFutureListener() {
-            @Override
-            public void operationComplete(ChannelFuture channelFuture) throws Exception {
-                if (channelFuture.isSuccess()) {
-                    channel = channelFuture.channel();
+        try {
+            channelFuture = bootstrap.connect(host,port).addListener(new ChannelFutureListener() {
+                @Override
+                public void operationComplete(ChannelFuture channelFuture) throws Exception {
+                    if (channelFuture.isSuccess()) {
+                        channel = channelFuture.channel();
+                    }
                 }
-            }
-        }).syncUninterruptibly();
+            }).syncUninterruptibly();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     @Override
