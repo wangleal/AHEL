@@ -26,7 +26,7 @@ public class SocketActivity extends AppCompatActivity{
         setContentView(R.layout.activity_socket);
 //        Socket socket = Socket.connect("62.234.130.115",10301)
 //        Socket socket = Socket.connectOrGet("172.30.20.205",8080)
-        Socket socket = Socket.connectOrGet("192.168.1.106",9999);
+        Socket socket = Socket.connectOrGet("192.168.1.106",9999,new RequestProcessor("12345678","12345678"),new ReceiveProcessor());
         disposable = socket.registerMessage()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

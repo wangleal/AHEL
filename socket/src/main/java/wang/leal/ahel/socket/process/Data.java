@@ -8,6 +8,8 @@ public class Data implements Parcelable {
     public int port;
     public String message;
 
+    public Data(){}
+
     public Data(String url,int port,String message){
         this.url = url;
         this.port = port;

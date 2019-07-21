@@ -10,6 +10,8 @@ import wang.leal.ahel.socket.process.Client;
 import wang.leal.ahel.socket.process.Data;
 import wang.leal.ahel.socket.process.MessageType;
 import wang.leal.ahel.socket.process.ProcessListener;
+import wang.leal.ahel.socket.processor.LocalProcessor;
+import wang.leal.ahel.socket.processor.RemoteProcessor;
 
 public class Socket{
     private static Map<String, Socket> appSockets = new HashMap<>();
@@ -27,6 +29,13 @@ public class Socket{
     public static void startProcess(Context context, ProcessListener listener){
         Client.getInstance().startSocketProcess(context,listener);
     }
+    /**
+     * start socket process.init once
+     * @param context context
+     */
+    public static void startProcess(Context context){
+        Client.getInstance().startSocketProcess(context,null);
+    }
 
     /**
      * stop socket process.
@@ -37,17 +46,20 @@ public class Socket{
     }
 
     public static Socket connectOrGet(String url,int port){
+        return connectOrGet(url,port,null,null);
+    }
+
+    public static Socket connectOrGet(String url, int port, LocalProcessor requestProcessor, RemoteProcessor receiveProcessor){
         String key = url+":"+port;
         Socket socket = appSockets.get(key);
         if (socket!=null){
             return socket;
         }else {
-            Client.getInstance().sendMessage(MessageType.CONNECT,new Data(url,port,null));
+            Client.getInstance().sendMessage(MessageType.CONNECT,new Data(url,port,null),requestProcessor,receiveProcessor);
             socket = new Socket(url,port);
             appSockets.put(key,socket);
             return socket;
         }
-
     }
 
     public void disconnect(){
