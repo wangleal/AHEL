@@ -6,6 +6,8 @@ import android.os.IBinder;
 
 import androidx.annotation.Nullable;
 
+import wang.leal.ahel.socket.log.Logger;
+
 public class SocketService extends Service {
 
     private Server messengerServer = new Server();
@@ -25,6 +27,7 @@ public class SocketService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        Logger.e("socket service destroy");
         messengerServer.destroy();
     }
 }

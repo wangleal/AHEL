@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import io.reactivex.Observable;
+import wang.leal.ahel.socket.log.Logger;
 import wang.leal.ahel.socket.process.Client;
 import wang.leal.ahel.socket.process.Data;
 import wang.leal.ahel.socket.process.MessageType;
@@ -50,19 +51,23 @@ public class Socket{
     }
 
     public static Socket connectOrGet(String url, int port, LocalProcessor requestProcessor, RemoteProcessor receiveProcessor){
+        Logger.e("connect or get");
         String key = url+":"+port;
         Socket socket = appSockets.get(key);
         if (socket!=null){
+            Logger.e("socket is not null");
             return socket;
         }else {
             Client.getInstance().sendMessage(MessageType.CONNECT,new Data(url,port,null),requestProcessor,receiveProcessor);
             socket = new Socket(url,port);
+            Logger.e("new socket");
             appSockets.put(key,socket);
             return socket;
         }
     }
 
     public void disconnect(){
+        Logger.e("socket disconnect");
         appSockets.remove(url+":"+port);
         Client.getInstance().sendMessage(MessageType.DISCONNECT,new Data(url,port,null));
     }

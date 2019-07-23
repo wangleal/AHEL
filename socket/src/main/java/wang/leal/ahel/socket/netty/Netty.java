@@ -20,6 +20,7 @@ import io.netty.handler.codec.string.StringEncoder;
 import io.netty.handler.timeout.IdleStateHandler;
 import io.netty.util.CharsetUtil;
 import wang.leal.ahel.socket.client.IConnection;
+import wang.leal.ahel.socket.log.Logger;
 
 public class Netty implements IConnection {
     private EventLoopGroup group = new NioEventLoopGroup();
@@ -38,13 +39,12 @@ public class Netty implements IConnection {
                     socketChannel.pipeline().addLast(clientHandler);
                 }
             });
-    private ChannelFuture channelFuture;
     private Channel channel;
 
     @Override
     public void connect(String host, int port){
         try {
-            channelFuture = bootstrap.connect(host,port).addListener(new ChannelFutureListener() {
+            bootstrap.connect(host,port).addListener(new ChannelFutureListener() {
                 @Override
                 public void operationComplete(ChannelFuture channelFuture) throws Exception {
                     if (channelFuture.isSuccess()) {
@@ -64,7 +64,14 @@ public class Netty implements IConnection {
 
     @Override
     public void close(){
-        channelFuture.channel().closeFuture().syncUninterruptibly();
+        try {
+            Logger.e("netty close");
+            channel.close();
+        }catch (Exception e){
+            Logger.e("netty close failed");
+            e.printStackTrace();
+        }
+        Logger.e("netty close success");
     }
 
     @Override

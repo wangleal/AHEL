@@ -29,6 +29,7 @@ class Server implements SocketClient.Callback{
         handler = new Handler(handlerThread.getLooper()) {
             @Override
             public void handleMessage(Message msg) {
+                Logger.e("server receive");
                 Bundle bundle = msg.getData();
                 bundle.setClassLoader(getClass().getClassLoader());
                 Data data = bundle.getParcelable(MessageKey.KEY_DATA);

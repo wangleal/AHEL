@@ -130,14 +130,14 @@ public class Client {
     public Observable<String> registerMessage(String url, int port){
         Subject<String> subject = getSubject(url,port);
         if (subject!=null){
-            return subject.toSerialized();
+            return subject;
         }else {
             return null;
         }
     }
 
     private void setSubject(String url,int port){
-        appSubjects.put(url+":"+port,PublishSubject.<String>create());
+        appSubjects.put(url+":"+port,PublishSubject.<String>create().toSerialized());
     }
 
     private Subject<String> getSubject(String url,int port){
@@ -195,6 +195,7 @@ public class Client {
         }
         msgToServer.replyTo = clientMessenger;
         try {
+            Logger.e("client send message to server");
             serviceMessenger.send(msgToServer);
         } catch (RemoteException e) {
             Logger.e("client send message error.\r\nserviceMessenger send error:"+e.getMessage());

@@ -1,5 +1,6 @@
 package wang.leal.ahel.socket.client;
 
+import wang.leal.ahel.socket.log.Logger;
 import wang.leal.ahel.socket.netty.Netty;
 
 public class SocketClient implements IConnection.OnMessageReceiveListener {
@@ -33,6 +34,7 @@ public class SocketClient implements IConnection.OnMessageReceiveListener {
     }
 
     public void disconnect(){
+        Logger.e("socket client disconnect");
         this.connection.close();
     }
 

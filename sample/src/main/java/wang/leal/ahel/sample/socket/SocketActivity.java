@@ -7,13 +7,10 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import wang.leal.ahel.R;
-import wang.leal.ahel.socket.Socket;
 
 public class SocketActivity extends AppCompatActivity{
     private StringBuilder stringBuilder = new StringBuilder();
@@ -26,8 +23,8 @@ public class SocketActivity extends AppCompatActivity{
         setContentView(R.layout.activity_socket);
 //        Socket socket = Socket.connect("62.234.130.115",10301)
 //        Socket socket = Socket.connectOrGet("172.30.20.205",8080)
-        Socket socket = Socket.connectOrGet("192.168.1.106",9999,new RequestProcessor("12345678","12345678"),new ReceiveProcessor());
-        disposable = socket.registerMessage()
+        Connection.connect("62.234.130.115",10301);
+        disposable = Connection.registerMessage("62.234.130.115",10301)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(message -> {
@@ -37,8 +34,9 @@ public class SocketActivity extends AppCompatActivity{
                 });
         EditText etInput = findViewById(R.id.et_input);
         findViewById(R.id.bt_send).setOnClickListener(v -> {
-            String message = etInput.getText().toString();
-            socket.sendMessage(message);
+//            String message = etInput.getText().toString();
+            Connection.sendAuth("62.234.130.115",10301);
+            Connection.connect("62.234.130.115",10301);
         });
         tvContent = findViewById(R.id.tv_content);
     }
@@ -47,5 +45,6 @@ public class SocketActivity extends AppCompatActivity{
     protected void onDestroy() {
         super.onDestroy();
         disposable.dispose();
+        Connection.disconnect("62.234.130.115",10301);
     }
 }
