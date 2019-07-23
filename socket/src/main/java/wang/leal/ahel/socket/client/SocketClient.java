@@ -3,23 +3,24 @@ package wang.leal.ahel.socket.client;
 import wang.leal.ahel.socket.log.Logger;
 import wang.leal.ahel.socket.netty.Netty;
 
-public class SocketClient implements IConnection.OnMessageReceiveListener {
+public class SocketClient implements IConnection.OnConnectionListener {
     private IConnection connection;
     private Callback callback;
     private String url;
     private int port;
 
-    private SocketClient(String url,int port,IConnection connection){
+    private SocketClient(String url,int port){
         this.url = url;
         this.port = port;
-        this.connection = connection;
-        this.connection.listen(this);
     }
 
-    public static SocketClient connect(String url, int port){
-        IConnection connection = getConnection();
-        connection.connect(url,port);
-        return new SocketClient(url,port,connection);
+    public static SocketClient with(String url, int port){
+        return new SocketClient(url,port);
+    }
+
+    public SocketClient connect(){
+        this.connection = getConnection();
+        return this;
     }
 
     public SocketClient callback(Callback callback){
@@ -49,7 +50,15 @@ public class SocketClient implements IConnection.OnMessageReceiveListener {
         }
     }
 
+    @Override
+    public void onConnected() {
+        if (callback!=null){
+            callback.onConnected(this.url,this.port);
+        }
+    }
+
     public interface Callback {
         void onMessageReceive(String url,int port,String message);
+        void onConnected(String url,int port);
     }
 }

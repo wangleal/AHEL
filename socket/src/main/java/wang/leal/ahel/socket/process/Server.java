@@ -65,7 +65,7 @@ class Server implements SocketClient.Callback{
         if (socketClient!=null){
             return socketClient;
         }else {
-            socketClient = SocketClient.connect(url,port).callback(this);
+            socketClient = SocketClient.with(url,port).callback(this).connect();
             String key = url+":"+port;
             socketClients.put(key,socketClient);
             return socketClient;
@@ -130,5 +130,11 @@ class Server implements SocketClient.Callback{
     public void onMessageReceive(String url, int port, String message) {
         Logger.e("socket receive:\r\n"+url+":"+port+"\r\nmessage:"+message);
         sendMessage(MessageType.MESSAGE,new Data(url,port,message));
+    }
+
+    @Override
+    public void onConnected(String url, int port) {
+        Logger.e("socket receive connected:\r\n"+url+":"+port+"\r\n");
+        sendMessage(MessageType.CONNECT_SUCCESS,new Data(url,port,null));
     }
 }

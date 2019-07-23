@@ -5,7 +5,6 @@ import java.util.concurrent.TimeUnit;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
-import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInitializer;
@@ -42,24 +41,20 @@ public class Netty implements IConnection {
     private Channel channel;
 
     @Override
-    public void connect(String host, int port){
+    public void connect(String host, int port,OnConnectionListener onConnectionListener){
+        clientHandler.listen(new WeakReference<>(onConnectionListener));
         try {
-            bootstrap.connect(host,port).addListener(new ChannelFutureListener() {
-                @Override
-                public void operationComplete(ChannelFuture channelFuture) throws Exception {
-                    if (channelFuture.isSuccess()) {
-                        channel = channelFuture.channel();
+            bootstrap.connect(host,port).addListener((ChannelFutureListener) channelFuture -> {
+                if (channelFuture.isSuccess()) {
+                    channel = channelFuture.channel();
+                    if (onConnectionListener!=null){
+                        onConnectionListener.onConnected();
                     }
                 }
             }).syncUninterruptibly();
         }catch (Exception e){
             e.printStackTrace();
         }
-    }
-
-    @Override
-    public void listen(OnMessageReceiveListener onMessageReceiveListener) {
-        clientHandler.listen(new WeakReference<>(onMessageReceiveListener));
     }
 
     @Override
@@ -86,9 +81,9 @@ public class Netty implements IConnection {
     }
 
     private static class ClientHandler extends SimpleChannelInboundHandler<String>{
-        WeakReference<OnMessageReceiveListener> listenerWeakReference;
+        WeakReference<OnConnectionListener> listenerWeakReference;
 
-        private void listen(WeakReference<OnMessageReceiveListener> listenerWeakReference){
+        private void listen(WeakReference<OnConnectionListener> listenerWeakReference){
             this.listenerWeakReference = listenerWeakReference;
         }
 

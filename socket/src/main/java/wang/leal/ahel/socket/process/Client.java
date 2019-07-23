@@ -97,6 +97,9 @@ public class Client {
                             getSubject(data.url,data.port).onNext(data.message);
                         }
                         break;
+                    case MessageType.CONNECT_SUCCESS:
+                        Logger.e("client receive connected");
+                        break;
                 }
             }
         };
