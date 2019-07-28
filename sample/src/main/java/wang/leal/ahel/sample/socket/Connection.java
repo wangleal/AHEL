@@ -1,5 +1,7 @@
 package wang.leal.ahel.sample.socket;
 
+import android.content.Context;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -41,5 +43,9 @@ public class Connection {
 
     public static void disconnect(String url,int port){
         Socket.connectOrGet(url,port).disconnect();
+    }
+
+    public static void init(Context context){
+        Socket.startProcess(context.getApplicationContext());
     }
 }
