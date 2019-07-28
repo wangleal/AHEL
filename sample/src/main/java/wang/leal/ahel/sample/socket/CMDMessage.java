@@ -214,6 +214,7 @@ class CMDMessage {
 
     private StringBuffer stringBuffer = new StringBuffer();
     String getRequestMessage(String request){
+        stringBuffer.setLength(0);
         String len;
         if (request.length()>9999){
             len = "9999";

@@ -4,7 +4,7 @@ ext{
 
     publishedGroupId = 'wang.leal.ahel'
     artifact = 'socket'
-    libraryVersion = '0.0.2'
+    libraryVersion = '0.0.3'
 
     libraryName = 'socket'
     libraryDescription = 'The socket library.'

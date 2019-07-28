@@ -11,6 +11,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import wang.leal.ahel.R;
+import wang.leal.ahel.socket.SocketStatusListener;
 
 public class SocketActivity extends AppCompatActivity{
     private StringBuilder stringBuilder = new StringBuilder();
@@ -23,7 +24,12 @@ public class SocketActivity extends AppCompatActivity{
         setContentView(R.layout.activity_socket);
 //        Socket socket = Socket.connect("62.234.130.115",10301)
 //        Socket socket = Socket.connectOrGet("172.30.20.205",8080)
-        Connection.connect("62.234.130.115",10301);
+        Connection.connect("62.234.130.115", 10301, new SocketStatusListener() {
+            @Override
+            public void onConnected() {
+                Connection.sendAuth("62.234.130.115",10301);
+            }
+        });
         disposable = Connection.registerMessage("62.234.130.115",10301)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -34,9 +40,8 @@ public class SocketActivity extends AppCompatActivity{
                 });
         EditText etInput = findViewById(R.id.et_input);
         findViewById(R.id.bt_send).setOnClickListener(v -> {
-//            String message = etInput.getText().toString();
-            Connection.sendAuth("62.234.130.115",10301);
-            Connection.connect("62.234.130.115",10301);
+            String message = etInput.getText().toString();
+            Connection.sendMessage("62.234.130.115",10301,message);
         });
         tvContent = findViewById(R.id.tv_content);
     }

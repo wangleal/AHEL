@@ -5,11 +5,12 @@ import org.json.JSONObject;
 
 import io.reactivex.Observable;
 import wang.leal.ahel.socket.Socket;
+import wang.leal.ahel.socket.SocketStatusListener;
 
 public class Connection {
 
-    public static void connect(String url,int port){
-        Socket.connectOrGet(url,port,new RequestProcessor("12345678","12345678"),new ReceiveProcessor());
+    public static void connect(String url, int port, SocketStatusListener socketStatusListener){
+        Socket.connectOrGet(url,port,socketStatusListener,new RequestProcessor("12345678","12345678"),new ReceiveProcessor());
     }
 
     public static Observable<String> registerMessage(String url, int port){

@@ -20,6 +20,7 @@ public class SocketClient implements IConnection.OnConnectionListener {
 
     public SocketClient connect(){
         this.connection = getConnection();
+        this.connection.connect(this.url,this.port,this);
         return this;
     }
 

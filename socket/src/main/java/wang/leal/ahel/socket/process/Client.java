@@ -22,6 +22,7 @@ import java.util.Map;
 import io.reactivex.Observable;
 import io.reactivex.subjects.PublishSubject;
 import io.reactivex.subjects.Subject;
+import wang.leal.ahel.socket.SocketStatusListener;
 import wang.leal.ahel.socket.log.Logger;
 import wang.leal.ahel.socket.processor.LocalProcessor;
 import wang.leal.ahel.socket.processor.RemoteProcessor;
@@ -31,6 +32,7 @@ public class Client {
     private Map<String,Subject<String>> appSubjects = new HashMap<>();
     private Map<String, LocalProcessor> requestProcessor = new HashMap<>();
     private Map<String, RemoteProcessor> receiveProcessor = new HashMap<>();
+    private Map<String, SocketStatusListener> socketStatusListeners = new HashMap<>();
     private Messenger clientMessenger;
     private Messenger serviceMessenger;
     private ServiceConnection serviceConnection = new ServiceConnection(){
@@ -98,6 +100,10 @@ public class Client {
                         }
                         break;
                     case MessageType.CONNECT_SUCCESS:
+                        SocketStatusListener socketStatusListener = getSocketStatusListener(data.url,data.port);
+                        if (socketStatusListener!=null){
+                            socketStatusListener.onConnected();
+                        }
                         Logger.e("client receive connected");
                         break;
                 }
@@ -140,19 +146,25 @@ public class Client {
     }
 
     private void setSubject(String url,int port){
-        appSubjects.put(url+":"+port,PublishSubject.<String>create().toSerialized());
+        if (getSubject(url,port)==null){
+            appSubjects.put(url+":"+port,PublishSubject.<String>create().toSerialized());
+        }
     }
 
     private Subject<String> getSubject(String url,int port){
         return appSubjects.get(url+":"+port);
     }
 
-    public void setRequestProcessor(String url, int port, LocalProcessor requestProcessor) {
+    private void setRequestProcessor(String url, int port, LocalProcessor requestProcessor) {
         this.requestProcessor.put(url+":"+port,requestProcessor);
     }
 
-    public void setReceiveProcessor(String url, int port, RemoteProcessor receiveProcessor) {
+    private void setReceiveProcessor(String url, int port, RemoteProcessor receiveProcessor) {
         this.receiveProcessor.put(url+":"+port,receiveProcessor);
+    }
+
+    private void setSocketStatusListener(String url, int port, SocketStatusListener socketStatusListener){
+        this.socketStatusListeners.put(url+":"+port,socketStatusListener);
     }
 
     private LocalProcessor getRequestProcessor(String url, int port) {
@@ -163,7 +175,11 @@ public class Client {
         return receiveProcessor.get(url+":"+port);
     }
 
-    public void sendMessage(int messageType, Data data, LocalProcessor requestProcessor, RemoteProcessor receiveProcessor){
+    private SocketStatusListener getSocketStatusListener(String url,int port) {
+        return socketStatusListeners.get(url+":"+port);
+    }
+
+    private void sendMessage(int messageType, Data data){
         if (serviceMessenger==null){
             Logger.e("serviceMessenger or data is null");
             return;
@@ -181,12 +197,6 @@ public class Client {
                     Logger.e("data.url is null");
                     return;
                 }
-                Subject<String> subject = getSubject(data.url,data.port);
-                if (subject==null){
-                    setSubject(data.url,data.port);
-                }
-                setRequestProcessor(data.url,data.port,requestProcessor);
-                setReceiveProcessor(data.url,data.port,receiveProcessor);
             }else if (messageType==MessageType.MESSAGE){
                 LocalProcessor processor = getRequestProcessor(data.url,data.port);
                 if (processor!=null){
@@ -207,11 +217,35 @@ public class Client {
     }
 
     public void sendMessage(Data data){
-        sendMessage(MessageType.MESSAGE,data,null,null);
+        sendMessage(MessageType.MESSAGE,data);
     }
 
-    public void sendMessage(int messageType, Data data){
-        sendMessage(messageType,data,null,null);
+    public void connect(String url,int port){
+        connect(url,port,null);
     }
 
+    public void connect(String url,int port,SocketStatusListener socketStatusListener){
+        connect(url,port,socketStatusListener,null,null);
+    }
+
+    public void connect(String url,int port,LocalProcessor localProcessor,RemoteProcessor remoteProcessor){
+        connect(url,port,null,localProcessor,remoteProcessor);
+    }
+
+    public void connect(String url,int port,SocketStatusListener socketStatusListener,LocalProcessor localProcessor,RemoteProcessor remoteProcessor){
+        setSubject(url,port);
+        setSocketStatusListener(url,port,socketStatusListener);
+        setRequestProcessor(url,port,localProcessor);
+        setReceiveProcessor(url,port,remoteProcessor);
+        sendMessage(MessageType.CONNECT,new Data(url,port,null));
+    }
+
+    public void disconnect(String url,int port){
+        sendMessage(MessageType.DISCONNECT,new Data(url,port,null));
+        String key = url+":"+port;
+        appSubjects.remove(key);
+        socketStatusListeners.remove(key);
+        requestProcessor.remove(key);
+        receiveProcessor.remove(key);
+    }
 }

@@ -50,7 +50,15 @@ public class Socket{
         return connectOrGet(url,port,null,null);
     }
 
+    public static Socket connectOrGet(String url, int port, SocketStatusListener socketStatusListener){
+        return connectOrGet(url,port,socketStatusListener,null,null);
+    }
+
     public static Socket connectOrGet(String url, int port, LocalProcessor requestProcessor, RemoteProcessor receiveProcessor){
+        return connectOrGet(url,port,null,requestProcessor,receiveProcessor);
+    }
+
+    public static Socket connectOrGet(String url, int port, SocketStatusListener socketStatusListener, LocalProcessor requestProcessor, RemoteProcessor receiveProcessor){
         Logger.e("connect or get");
         String key = url+":"+port;
         Socket socket = appSockets.get(key);
@@ -58,7 +66,7 @@ public class Socket{
             Logger.e("socket is not null");
             return socket;
         }else {
-            Client.getInstance().sendMessage(MessageType.CONNECT,new Data(url,port,null),requestProcessor,receiveProcessor);
+            Client.getInstance().connect(url,port,socketStatusListener,requestProcessor,receiveProcessor);
             socket = new Socket(url,port);
             Logger.e("new socket");
             appSockets.put(key,socket);
@@ -69,7 +77,7 @@ public class Socket{
     public void disconnect(){
         Logger.e("socket disconnect");
         appSockets.remove(url+":"+port);
-        Client.getInstance().sendMessage(MessageType.DISCONNECT,new Data(url,port,null));
+        Client.getInstance().disconnect(url,port);
     }
 
     public Observable<String> registerMessage(){
