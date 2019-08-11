@@ -23,7 +23,10 @@ public class SocketActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_socket);
 //        Socket socket = Socket.connect("62.234.130.115",10301)
-//        Socket socket = Socket.connectOrGet("172.30.20.205",8080)
+//        Socket socket = Socket.connectOrGet("172.18.50.109",8080);
+//        Disposable disposable = socket.registerMessage().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(str -> {
+//            tvContent.setText(str);
+//        });
         Connection.connect("62.234.130.115", 10301, new SocketStatusListener() {
             @Override
             public void onConnected() {

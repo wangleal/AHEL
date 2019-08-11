@@ -12,7 +12,7 @@ import wang.leal.ahel.socket.SocketStatusListener;
 public class Connection {
 
     public static void connect(String url, int port, SocketStatusListener socketStatusListener){
-        Socket.connectOrGet(url,port,socketStatusListener,new RequestProcessor("12345678","12345678"),new ReceiveProcessor());
+        Socket.connectOrGet(url,port,socketStatusListener,new RequestProcessor("10000042","10000049"),new ReceiveProcessor());
     }
 
     public static Observable<String> registerMessage(String url, int port){
