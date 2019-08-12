@@ -22,6 +22,6 @@ public class UtilsActivity extends AppCompatActivity {
         byte[] abc = ParcelUtil.marshall(data);
         Data dataRead = ParcelUtil.unmarshall(abc,Data.class);
         Log.e("Utils","name:"+dataRead.name+",age:"+dataRead.age);
-        FileUtil.getExternalFile(getApplicationContext(),"test","a.txt");
+        FileUtil.getExternalFilesFile(getApplicationContext(),"test","a.txt");
     }
 }

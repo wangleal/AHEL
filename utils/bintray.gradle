@@ -4,7 +4,7 @@ ext{
 
     publishedGroupId = 'wang.leal.ahel'
     artifact = 'utils'
-    libraryVersion = '0.0.8'
+    libraryVersion = '0.0.9'
 
     libraryName = 'utils'
     libraryDescription = 'The android utils.'
