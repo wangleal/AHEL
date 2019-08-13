@@ -9,6 +9,9 @@ import org.json.JSONTokener;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 
+import wang.leal.ahel.utils.ByteArrayUtil;
+import wang.leal.ahel.utils.StringUtil;
+
 /**
  * > 例: 10S11000123456780004RESERVEDPING // ping 消息
  * > ver  2  "10"
@@ -33,7 +36,7 @@ class CMDMessage {
     private String seq;
     private String len;
     private String res;
-    private String body;
+    private byte[] body;
 
     static CMDMessage getInstance() {
         return INSTANCE;
@@ -58,49 +61,49 @@ class CMDMessage {
         int verLength = 2;
         if (TextUtils.isEmpty(ver)){
             if (length>=messageIndex+verLength){
-                this.ver = subByteArray(message,messageIndex,messageIndex+verLength);
+                this.ver = ByteArrayUtil.subByteArray(message,messageIndex,messageIndex+verLength);
                 messageIndex = messageIndex+verLength;
             }else {
-                this.ver = subByteArray(message,messageIndex);
+                this.ver = ByteArrayUtil.subByteArray(message,messageIndex);
                 return null;
             }
         }else {
-            if (getStringByteLength(ver)<verLength){
-                this.ver = this.ver+subByteArray(message,messageIndex,messageIndex+1);
+            if (StringUtil.getStringByteLength(ver)<verLength){
+                this.ver = this.ver+ByteArrayUtil.subByteArray(message,messageIndex,messageIndex+1);
                 messageIndex = messageIndex+1;
             }
         }
         int typLength = 1;
         if (TextUtils.isEmpty(typ)){
             if (length>=messageIndex+typLength){
-                this.typ = subByteArray(message,messageIndex,messageIndex+typLength);
+                this.typ = ByteArrayUtil.subByteArray(message,messageIndex,messageIndex+typLength);
                 messageIndex = messageIndex+typLength;
             }
         }
         int optLength = 1;
         if (TextUtils.isEmpty(opt)){
             if (length>=messageIndex+optLength){
-                this.opt = subByteArray(message,messageIndex,messageIndex+optLength);
+                this.opt = ByteArrayUtil.subByteArray(message,messageIndex,messageIndex+optLength);
                 messageIndex = messageIndex+optLength;
             }
         }
         int cmdLength = 4;
         if (TextUtils.isEmpty(cmd)){
             if (length>=messageIndex+cmdLength){
-                this.cmd = subByteArray(message,messageIndex,messageIndex+cmdLength);
+                this.cmd = ByteArrayUtil.subByteArray(message,messageIndex,messageIndex+cmdLength);
                 messageIndex = messageIndex+cmdLength;
             }else {
-                this.cmd = subByteArray(message,messageIndex);
+                this.cmd = ByteArrayUtil.subByteArray(message,messageIndex);
                 return null;
             }
         }else {
-            if (getStringByteLength(cmd)<cmdLength){
-                int diff = cmdLength-getStringByteLength(cmd);
+            if (StringUtil.getStringByteLength(cmd)<cmdLength){
+                int diff = cmdLength-StringUtil.getStringByteLength(cmd);
                 if (length>=messageIndex+diff){
-                    this.cmd = this.cmd+subByteArray(message,messageIndex,messageIndex+diff);
+                    this.cmd = this.cmd+ByteArrayUtil.subByteArray(message,messageIndex,messageIndex+diff);
                     messageIndex = messageIndex+diff;
                 }else {
-                    this.cmd = this.cmd+subByteArray(message,messageIndex);
+                    this.cmd = this.cmd+ByteArrayUtil.subByteArray(message,messageIndex);
                     return null;
                 }
             }
@@ -108,20 +111,20 @@ class CMDMessage {
         int seqLength = 8;
         if (TextUtils.isEmpty(seq)){
             if (length>=messageIndex+seqLength){
-                this.seq = subByteArray(message,messageIndex,messageIndex+seqLength);
+                this.seq = ByteArrayUtil.subByteArray(message,messageIndex,messageIndex+seqLength);
                 messageIndex = messageIndex+seqLength;
             }else {
-                this.seq = subByteArray(message,messageIndex);
+                this.seq = ByteArrayUtil.subByteArray(message,messageIndex);
                 return null;
             }
         }else {
-            if (getStringByteLength(seq)<seqLength){
-                int diff = seqLength-getStringByteLength(seq);
+            if (StringUtil.getStringByteLength(seq)<seqLength){
+                int diff = seqLength-StringUtil.getStringByteLength(seq);
                 if (length>=messageIndex+diff){
-                    this.seq = this.seq+subByteArray(message,messageIndex,messageIndex+diff);
+                    this.seq = this.seq+ByteArrayUtil.subByteArray(message,messageIndex,messageIndex+diff);
                     messageIndex = messageIndex+diff;
                 }else {
-                    this.seq = this.seq+subByteArray(message,messageIndex);
+                    this.seq = this.seq+ByteArrayUtil.subByteArray(message,messageIndex);
                     return null;
                 }
             }
@@ -129,20 +132,20 @@ class CMDMessage {
         int lenLength = 4;
         if (TextUtils.isEmpty(len)){
             if (length>=messageIndex+lenLength){
-                this.len = subByteArray(message,messageIndex,messageIndex+lenLength);
+                this.len = ByteArrayUtil.subByteArray(message,messageIndex,messageIndex+lenLength);
                 messageIndex = messageIndex+lenLength;
             }else {
-                this.len = subByteArray(message,messageIndex);
+                this.len = ByteArrayUtil.subByteArray(message,messageIndex);
                 return null;
             }
         }else {
-            if (getStringByteLength(len)<lenLength){
-                int diff = lenLength-getStringByteLength(len);
+            if (StringUtil.getStringByteLength(len)<lenLength){
+                int diff = lenLength-StringUtil.getStringByteLength(len);
                 if (length>=messageIndex+diff){
-                    this.len = this.len+subByteArray(message,messageIndex,messageIndex+diff);
+                    this.len = this.len+ByteArrayUtil.subByteArray(message,messageIndex,messageIndex+diff);
                     messageIndex = messageIndex+diff;
                 }else {
-                    this.len = this.len+subByteArray(message,messageIndex);
+                    this.len = this.len+ByteArrayUtil.subByteArray(message,messageIndex);
                     return null;
                 }
             }
@@ -151,20 +154,20 @@ class CMDMessage {
         int resLength = 8;
         if (TextUtils.isEmpty(res)){
             if (length>=messageIndex+resLength){
-                this.res = subByteArray(message,messageIndex,messageIndex+resLength);
+                this.res = ByteArrayUtil.subByteArray(message,messageIndex,messageIndex+resLength);
                 messageIndex = messageIndex+resLength;
             }else {
-                this.res = subByteArray(message,messageIndex);
+                this.res = ByteArrayUtil.subByteArray(message,messageIndex);
                 return null;
             }
         }else {
-            if (getStringByteLength(res)<resLength){
-                int diff = resLength-getStringByteLength(res);
+            if (StringUtil.getStringByteLength(res)<resLength){
+                int diff = resLength-StringUtil.getStringByteLength(res);
                 if (length>=messageIndex+diff){
-                    this.res = this.res+subByteArray(message,messageIndex,messageIndex+diff);
+                    this.res = this.res+ByteArrayUtil.subByteArray(message,messageIndex,messageIndex+diff);
                     messageIndex = messageIndex+diff;
                 }else {
-                    this.res = this.res+subByteArray(message,messageIndex);
+                    this.res = this.res+ByteArrayUtil.subByteArray(message,messageIndex);
                     return null;
                 }
             }
@@ -174,22 +177,22 @@ class CMDMessage {
             return null;
         }
         int bodyLength = Integer.valueOf(len);
-        if (TextUtils.isEmpty(body)){
+        if (body==null||body.length<=0){
             if (length>=messageIndex+bodyLength){
-                this.body = subByteArray(message,messageIndex,messageIndex+bodyLength);
+                this.body = Arrays.copyOfRange(message, messageIndex, messageIndex+bodyLength);
                 messageIndex = messageIndex+bodyLength;
             }else {
-                this.body = subByteArray(message,messageIndex);
+                this.body = Arrays.copyOfRange(message, messageIndex, length);
                 return null;
             }
         }else {
-            if (getStringByteLength(body)<bodyLength){
-                int diff = bodyLength-getStringByteLength(body);
+            if (body.length<bodyLength){
+                int diff = bodyLength-body.length;
                 if (length>=messageIndex+diff){
-                    this.body = this.body+subByteArray(message,messageIndex,messageIndex+diff);
+                    this.body =ByteArrayUtil.concat(this.body,Arrays.copyOfRange(message, messageIndex, messageIndex+diff));
                     messageIndex = messageIndex+diff;
                 }else {
-                    this.body = this.body+subByteArray(message,messageIndex);
+                    this.body = ByteArrayUtil.concat(this.body,Arrays.copyOfRange(message, messageIndex, length));
                     return null;
                 }
             }
@@ -201,9 +204,10 @@ class CMDMessage {
         try {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("cmd",cmd);
-            JSONTokener jsonTokener = new JSONTokener(body);
+            String data = new String(body,Charset.forName("UTF-8"));
+            JSONTokener jsonTokener = new JSONTokener(data);
             if (jsonTokener.nextValue() instanceof JSONObject){
-                JSONObject bodyJson = new JSONObject(body);
+                JSONObject bodyJson = new JSONObject(data);
                 jsonObject.put("data",bodyJson);
             }else {
                 jsonObject.put("data",body);
@@ -224,23 +228,14 @@ class CMDMessage {
         return null;
     }
 
-    private String subByteArray(byte[] message,int start,int end){
-        byte[] slice = Arrays.copyOfRange(message, start, end);
-        return new String(slice,Charset.forName("UTF-8"));
-    }
-
-    private String subByteArray(byte[] message,int start){
-        return subByteArray(message,start,message.length);
-    }
-
     private StringBuffer stringBuffer = new StringBuffer();
     String getRequestMessage(String request){
         stringBuffer.setLength(0);
         String len;
-        int length = getStringByteLength(request);
+        int length = StringUtil.getStringByteLength(request);
         if (length>9999){
             len = "9999";
-            this.body = subByteArray(request.getBytes(Charset.forName("UTF-8")),0,9999);
+            this.body = Arrays.copyOfRange(request.getBytes(Charset.forName("UTF-8")),0,9999);
         }else if (length>999){
             len = length+"";
         }else if (length>99){
@@ -257,16 +252,8 @@ class CMDMessage {
                 .append("12345678")
                 .append(len)
                 .append("00000000")
-                .append(request);
+                .append(new String(body,Charset.forName("UTF-8")));
         return stringBuffer.toString();
-    }
-
-    private int getStringByteLength(String message){
-        if (TextUtils.isEmpty(message)){
-            return 0;
-        }else {
-            return message.getBytes(Charset.forName("UTF-8")).length;
-        }
     }
 
 }
