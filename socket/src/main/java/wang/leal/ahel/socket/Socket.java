@@ -9,7 +9,6 @@ import io.reactivex.Observable;
 import wang.leal.ahel.socket.log.Logger;
 import wang.leal.ahel.socket.process.Client;
 import wang.leal.ahel.socket.process.Data;
-import wang.leal.ahel.socket.process.MessageType;
 import wang.leal.ahel.socket.process.ProcessListener;
 import wang.leal.ahel.socket.processor.LocalProcessor;
 import wang.leal.ahel.socket.processor.RemoteProcessor;

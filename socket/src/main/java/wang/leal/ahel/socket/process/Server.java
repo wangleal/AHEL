@@ -128,13 +128,13 @@ class Server implements SocketClient.Callback{
 
     @Override
     public void onMessageReceive(String url, int port, String message) {
-        Logger.e("socket receive:\r\n"+url+":"+port+"\r\nmessage:"+message);
+        Logger.e("socket receive:"+url+":"+port);
         sendMessage(MessageType.MESSAGE,new Data(url,port,message));
     }
 
     @Override
     public void onConnected(String url, int port) {
-        Logger.e("socket receive connected:\r\n"+url+":"+port+"\r\n");
+        Logger.e("socket receive connected:"+url+":"+port);
         sendMessage(MessageType.CONNECT_SUCCESS,new Data(url,port,null));
     }
 }

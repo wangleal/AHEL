@@ -14,7 +14,9 @@ import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
 import android.text.TextUtils;
+import android.util.Base64;
 
+import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -83,10 +85,11 @@ public class Client {
                         }
                         break;
                     case MessageType.MESSAGE:
-                        Logger.e("client receive message:"+data.message);
+                        byte[] bytes = Base64.decode(data.message,Base64.DEFAULT);
+                        Logger.e("client receive message");
                         RemoteProcessor processor = getReceiveProcessor(data.url, data.port);
                         if (processor!=null){
-                            List<String> messages = processor.handleMessage(data.message);
+                            List<String> messages = processor.handleMessage(bytes);
                             if (messages!=null&&messages.size()>0){
                                 for (String message:messages){
                                     Logger.e("receive processor handle message:"+message);
@@ -101,7 +104,7 @@ public class Client {
                         }else {
                             Subject<String> subject = getSubject(data.url,data.port);
                             if (subject!=null){
-                                subject.onNext(data.message);
+                                subject.onNext(new String(bytes, Charset.forName("UTF-8")));
                             }
                         }
                         break;

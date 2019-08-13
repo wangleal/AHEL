@@ -47,5 +47,6 @@ public class Connection {
 
     public static void init(Context context){
         Socket.startProcess(context.getApplicationContext());
+        Socket.showLog(true);
     }
 }

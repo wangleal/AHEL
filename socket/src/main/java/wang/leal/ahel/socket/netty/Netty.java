@@ -1,6 +1,9 @@
 package wang.leal.ahel.socket.netty;
 
+import android.util.Base64;
+
 import java.lang.ref.WeakReference;
+import java.nio.charset.Charset;
 import java.util.concurrent.TimeUnit;
 
 import io.netty.bootstrap.Bootstrap;
@@ -14,10 +17,9 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.handler.codec.string.StringDecoder;
+import io.netty.handler.codec.bytes.ByteArrayDecoder;
 import io.netty.handler.codec.string.StringEncoder;
 import io.netty.handler.timeout.IdleStateHandler;
-import io.netty.util.CharsetUtil;
 import wang.leal.ahel.socket.client.IConnection;
 import wang.leal.ahel.socket.log.Logger;
 
@@ -33,8 +35,8 @@ public class Netty implements IConnection {
                 @Override
                 protected void initChannel(SocketChannel socketChannel){
                     socketChannel.pipeline().addLast(new IdleStateHandler(0, 5, 0, TimeUnit.SECONDS));
-                    socketChannel.pipeline().addLast(new StringDecoder(CharsetUtil.UTF_8));
-                    socketChannel.pipeline().addLast(new StringEncoder(CharsetUtil.UTF_8));
+                    socketChannel.pipeline().addLast(new ByteArrayDecoder());
+                    socketChannel.pipeline().addLast(new StringEncoder(Charset.forName("UTF-8")));
                     socketChannel.pipeline().addLast(clientHandler);
                 }
             });
@@ -80,7 +82,7 @@ public class Netty implements IConnection {
         }
     }
 
-    private static class ClientHandler extends SimpleChannelInboundHandler<String>{
+    private static class ClientHandler extends SimpleChannelInboundHandler<byte[]>{
         WeakReference<OnConnectionListener> listenerWeakReference;
 
         private void listen(WeakReference<OnConnectionListener> listenerWeakReference){
@@ -88,9 +90,10 @@ public class Netty implements IConnection {
         }
 
         @Override
-        protected void messageReceived(ChannelHandlerContext ctx, String msg) throws Exception {
+        protected void messageReceived(ChannelHandlerContext ctx, byte[] msg) {
             if (listenerWeakReference!=null&&listenerWeakReference.get()!=null){
-                listenerWeakReference.get().onMessageReceive(msg);
+                Logger.e("netty receive message:"+new String(msg, Charset.forName("UTF-8")));
+                listenerWeakReference.get().onMessageReceive(Base64.encodeToString(msg,Base64.DEFAULT));
             }
         }
 
