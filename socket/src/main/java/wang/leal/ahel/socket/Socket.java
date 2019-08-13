@@ -88,7 +88,7 @@ public class Socket{
         Client.getInstance().sendMessage(new Data(url,port,message));
     }
 
-    public void showLog(boolean isShow){
+    public static void showLog(boolean isShow){
         if (isShow){
             Logger.open();
         }else {
