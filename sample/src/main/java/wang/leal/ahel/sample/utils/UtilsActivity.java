@@ -6,6 +6,7 @@ import android.util.Log;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import wang.leal.ahel.utils.FileUtil;
 import wang.leal.ahel.utils.ParcelUtil;
 
 public class UtilsActivity extends AppCompatActivity {
@@ -21,5 +22,6 @@ public class UtilsActivity extends AppCompatActivity {
         byte[] abc = ParcelUtil.marshall(data);
         Data dataRead = ParcelUtil.unmarshall(abc,Data.class);
         Log.e("Utils","name:"+dataRead.name+",age:"+dataRead.age);
+        FileUtil.getExternalFilesFile(getApplicationContext(),"test","a.txt");
     }
 }

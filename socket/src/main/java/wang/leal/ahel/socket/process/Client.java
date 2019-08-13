@@ -91,12 +91,18 @@ public class Client {
                                 for (String message:messages){
                                     Logger.e("receive processor handle message:"+message);
                                     if (!TextUtils.isEmpty(message)){
-                                        getSubject(data.url,data.port).onNext(message);
+                                        Subject<String> subject = getSubject(data.url,data.port);
+                                        if (subject!=null){
+                                            subject.onNext(message);
+                                        }
                                     }
                                 }
                             }
                         }else {
-                            getSubject(data.url,data.port).onNext(data.message);
+                            Subject<String> subject = getSubject(data.url,data.port);
+                            if (subject!=null){
+                                subject.onNext(data.message);
+                            }
                         }
                         break;
                     case MessageType.CONNECT_SUCCESS:

@@ -1,6 +1,7 @@
 package wang.leal.ahel.utils;
 
 import java.nio.charset.Charset;
+import java.util.Arrays;
 
 public class ByteArrayUtil {
 
@@ -60,6 +61,15 @@ public class ByteArrayUtil {
         System.arraycopy(secondArray, 0, bytes, firstArray.length,
                 secondArray.length);
         return bytes;
+    }
+
+    public static String subByteArray(byte[] message,int start,int end){
+        byte[] slice = Arrays.copyOfRange(message, start, end);
+        return new String(slice,Charset.forName("UTF-8"));
+    }
+
+    public static String subByteArray(byte[] message,int start){
+        return subByteArray(message,start,message.length);
     }
 
 }

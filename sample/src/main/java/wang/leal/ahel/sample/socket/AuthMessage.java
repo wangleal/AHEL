@@ -1,5 +1,10 @@
 package wang.leal.ahel.sample.socket;
 
+import android.text.TextUtils;
+
+import java.nio.charset.Charset;
+import java.util.Arrays;
+
 /**
  * > 例: 10S0100000006000000012345678003212345678901234567890123456789012
  * > ver   2   10
@@ -32,17 +37,18 @@ class AuthMessage {
 
     String getMessage(String request) {
         String message = this.body = request;
-        if (message.length()>9999){
+        int length = getStringByteLength(message);
+        if (length>9999){
             this.len = "9999";
-            this.body = message.substring(0,9999);
-        }else if (message.length()>999){
-            this.len = message.length()+"";
-        }else if (message.length()>99){
-            this.len = "0"+message.length();
-        }else if (message.length()>9){
-            this.len = "00"+message.length();
+            this.body = subByteArray(message.getBytes(Charset.forName("UTF-8")),0,9999);
+        }else if (length>999){
+            this.len = length+"";
+        }else if (length>99){
+            this.len = "0"+length;
+        }else if (length>9){
+            this.len = "00"+length;
         }else {
-            this.len = "000"+message.length();
+            this.len = "000"+length;
         }
         requestMessage.setLength(0);
         return requestMessage.append(ver)
@@ -53,5 +59,22 @@ class AuthMessage {
                 .append(sign)
                 .append(len)
                 .append(body).toString();
+    }
+
+    private String subByteArray(byte[] message,int start,int end){
+        byte[] slice = Arrays.copyOfRange(message, start, end);
+        return new String(slice,Charset.forName("UTF-8"));
+    }
+
+    private String subByteArray(byte[] message,int start){
+        return subByteArray(message,start,message.length);
+    }
+
+    private int getStringByteLength(String message){
+        if (TextUtils.isEmpty(message)){
+            return 0;
+        }else {
+            return message.getBytes(Charset.forName("UTF-8")).length;
+        }
     }
 }
