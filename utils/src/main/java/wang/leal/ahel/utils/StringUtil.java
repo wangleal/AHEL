@@ -21,7 +21,7 @@ public class StringUtil {
      */
     public static int getStringLengthByC1E2(String message){
         int valueLength = 0;
-        String chinese = "[\u0391-\uFFE5]";
+        String chinese = "[\u4e00-\u9fa5]";
         for (int i = 0; i < message.length(); i++) {
             String temp = message.substring(i, i + 1);
             if (temp.matches(chinese)) {
@@ -34,7 +34,7 @@ public class StringUtil {
     }
 
     public static boolean hasChinese(String message){
-        String chinese = "[\u0391-\uFFE5]";
+        String chinese = "[\u4e00-\u9fa5]";
         for (int i = 0; i < message.length(); i++) {
             String temp = message.substring(i, i + 1);
             if (temp.matches(chinese)) {
