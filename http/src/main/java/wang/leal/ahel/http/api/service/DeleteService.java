@@ -1,7 +1,7 @@
 package wang.leal.ahel.http.api.service;
 
 import wang.leal.ahel.http.api.Api;
-import wang.leal.ahel.http.api.annotation.GET;
+import wang.leal.ahel.http.api.annotation.DELETE;
 import wang.leal.ahel.http.api.annotation.HeaderMap;
 import wang.leal.ahel.http.api.annotation.QueryMap;
 import wang.leal.ahel.http.api.annotation.Url;
@@ -13,43 +13,43 @@ import java.util.Map;
 
 import io.reactivex.rxjava3.core.Observable;
 
-public final class GetService {
-    private final String url;
-    private final Map<String,String> headerMap = new HashMap<>();
-    private final Map<String,String> queryMap = new HashMap<>();
+public final class DeleteService {
+    protected String url;
+    protected Map<String,String> headerMap = new HashMap<>();
+    protected Map<String,String> queryMap = new HashMap<>();
 
     public <T> Observable<T> observable(Class<T> clazz){
-        Observable<String> stringObservable = Api.INSTANCE.create(GetApi.class)
-                .get(url,headerMap,queryMap);
+        Observable<String> stringObservable = Api.INSTANCE.create(DeleteApi.class)
+                .delete(url,headerMap,queryMap);
         return stringObservable.map(s -> GsonManager.INSTANCE.gson().fromJson(s,clazz));
     }
 
-    public GetService(String key){
+    public DeleteService(String key){
         this.url = UrlUtil.getUrlByKey(key);
     }
 
-    public GetService header(String key, String value){
+    public DeleteService header(String key, String value){
         this.headerMap.put(key,value);
         return this;
     }
 
-    public GetService headerMap(Map<String,String> headerMap){
+    public DeleteService headerMap(Map<String,String> headerMap){
         this.headerMap.putAll(headerMap);
         return this;
     }
 
-    public GetService query(String key, String value){
+    public DeleteService query(String key, String value){
         this.queryMap.put(key,value);
         return this;
     }
 
-    public GetService queryMap(Map<String,String> queryMap){
+    public DeleteService queryMap(Map<String,String> queryMap){
         this.queryMap.putAll(queryMap);
         return this;
     }
 
-    public interface GetApi{
-        @GET
-        Observable<String> get(@Url String url, @HeaderMap Map<String, String> headerMap, @QueryMap Map<String, String> queryMap);
+    public interface DeleteApi{
+        @DELETE
+        Observable<String> delete(@Url String url, @HeaderMap Map<String, String> headerMap, @QueryMap Map<String, String> queryMap);
     }
 }
