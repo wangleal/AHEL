@@ -162,7 +162,9 @@ final class RequestBuilder {
   }
 
   void addQueryParam(String name, @Nullable String value, boolean encoded) {
-    urlBuilder = Objects.requireNonNull(HttpUrl.parse(url)).newBuilder();
+    if (urlBuilder==null){
+      urlBuilder = Objects.requireNonNull(HttpUrl.parse(url)).newBuilder();
+    }
 
     if (encoded) {
       urlBuilder.addEncodedQueryParameter(name, value);

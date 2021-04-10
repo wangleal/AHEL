@@ -7,15 +7,12 @@ import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import okhttp3.HttpUrl;
-import retrofit2.http.Url;
-
 /**
  * Use a custom HTTP verb for a request.
  *
  * <pre><code>
  * interface Service {
- *   &#064;HTTP(method = "CUSTOM")
+ *   &#064;HTTP(method = "CUSTOM",url = "http://www.abc.com/custom/endpoint/")
  *   Observable&lt;T&gt; customEndpoint();
  * }
  * </code></pre>
@@ -24,7 +21,7 @@ import retrofit2.http.Url;
  *
  * <pre><code>
  * interface Service {
- *   &#064;HTTP(method = "DELETE", hasBody = true)
+ *   &#064;HTTP(method = "DELETE", hasBody = true,url = "http://www.abc.com/custom/endpoint/")
  *   Observable&lt;T&gt; deleteObject(@Body RequestBody object);
  * }
  * </code></pre>
@@ -35,8 +32,8 @@ import retrofit2.http.Url;
 public @interface HTTP {
   String method();
   /**
-   * A key of Url.
+   * The url.
    */
-  String key() default "";
+  String url() default "";
   boolean hasBody() default false;
 }

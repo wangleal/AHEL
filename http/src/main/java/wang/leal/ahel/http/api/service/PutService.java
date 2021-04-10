@@ -7,7 +7,6 @@ import wang.leal.ahel.http.api.annotation.PUT;
 import wang.leal.ahel.http.api.annotation.QueryMap;
 import wang.leal.ahel.http.api.annotation.Url;
 import wang.leal.ahel.http.json.GsonManager;
-import wang.leal.ahel.http.utils.UrlUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -31,8 +30,8 @@ public final class PutService {
         return stringObservable.map(function);
     }
 
-    public PutService(String key){
-        this.url = UrlUtil.getUrlByKey(key);
+    public PutService(String url){
+        this.url = url;
     }
 
     public PutService header(String key, String value){

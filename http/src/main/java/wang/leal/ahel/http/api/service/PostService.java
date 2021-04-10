@@ -11,7 +11,6 @@ import wang.leal.ahel.http.api.annotation.PartMap;
 import wang.leal.ahel.http.api.annotation.QueryMap;
 import wang.leal.ahel.http.api.annotation.Url;
 import wang.leal.ahel.http.json.GsonManager;
-import wang.leal.ahel.http.utils.UrlUtil;
 
 import java.io.File;
 import java.util.HashMap;
@@ -30,8 +29,8 @@ public final class PostService {
     private final Map<String, RequestBody> requestBodyMap = new HashMap<>();
     private Object body;
 
-    public PostService(String key) {
-        this.url = UrlUtil.getUrlByKey(key);
+    public PostService(String url) {
+        this.url = url;
     }
 
     public <T> Observable<T> observable(Class<T> clazz) {

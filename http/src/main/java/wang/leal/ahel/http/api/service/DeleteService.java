@@ -6,7 +6,6 @@ import wang.leal.ahel.http.api.annotation.HeaderMap;
 import wang.leal.ahel.http.api.annotation.QueryMap;
 import wang.leal.ahel.http.api.annotation.Url;
 import wang.leal.ahel.http.json.GsonManager;
-import wang.leal.ahel.http.utils.UrlUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,8 +23,8 @@ public final class DeleteService {
         return stringObservable.map(s -> GsonManager.INSTANCE.gson().fromJson(s,clazz));
     }
 
-    public DeleteService(String key){
-        this.url = UrlUtil.getUrlByKey(key);
+    public DeleteService(String url){
+        this.url = url;
     }
 
     public DeleteService header(String key, String value){

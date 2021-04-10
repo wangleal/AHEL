@@ -5,7 +5,7 @@ import android.content.Context;
 import java.util.HashMap;
 import java.util.Map;
 
-import io.reactivex.Observable;
+import io.reactivex.rxjava3.core.Observable;
 import wang.leal.ahel.socket.log.Logger;
 import wang.leal.ahel.socket.process.Client;
 import wang.leal.ahel.socket.process.Data;

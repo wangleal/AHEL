@@ -12,12 +12,10 @@ import wang.leal.ahel.http.utils.Utils;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 
-import kotlin.Unit;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 
 public class ApiConverterFactory extends Converter.Factory{
-    private boolean checkForKotlinUnit = true;
     private final Gson gson = GsonManager.INSTANCE.gson();
     public static ApiConverterFactory create() {
         return new ApiConverterFactory();
@@ -57,18 +55,6 @@ public class ApiConverterFactory extends Converter.Factory{
             return Utils.isAnnotationPresent(annotations, Streaming.class)
                     ? StreamingResponseBodyConverter.INSTANCE
                     : BufferingResponseBodyConverter.INSTANCE;
-        }
-        if (type == Void.class) {
-            return VoidResponseBodyConverter.INSTANCE;
-        }
-        if (checkForKotlinUnit) {
-            try {
-                if (type == Unit.class) {
-                    return UnitResponseBodyConverter.INSTANCE;
-                }
-            } catch (NoClassDefFoundError ignored) {
-                checkForKotlinUnit = false;
-            }
         }
         return new ApiResponseBodyConverter<>(type);
     }

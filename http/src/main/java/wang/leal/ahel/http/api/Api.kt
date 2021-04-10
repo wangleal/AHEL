@@ -7,24 +7,24 @@ object Api {
         return ApiService.createService().create(service)
     }
 
-    fun get(key:String): GetService {
-        return ApiService.getService(key)
+    fun get(url:String): GetService {
+        return ApiService.getService(url)
     }
 
-    fun post(key:String): PostService {
-        return ApiService.postService(key)
+    fun post(url:String): PostService {
+        return ApiService.postService(url)
     }
 
-    fun delete(key:String):DeleteService{
-        return ApiService.deleteService(key)
+    fun delete(url:String):DeleteService{
+        return ApiService.deleteService(url)
     }
 
-    fun patch(key:String):PatchService{
-        return ApiService.patchService(key)
+    fun patch(url:String):PatchService{
+        return ApiService.patchService(url)
     }
 
-    fun put(key:String):PutService{
-        return ApiService.putService(key)
+    fun put(url:String):PutService{
+        return ApiService.putService(url)
     }
 
 }

@@ -3,6 +3,8 @@ package wang.leal.ahel.http.api.converter;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+
+import kotlin.Unit;
 import wang.leal.ahel.http.json.GsonManager;
 
 import java.io.IOException;
@@ -12,6 +14,7 @@ import okhttp3.ResponseBody;
 
 public class ResponseHelper {
 
+    @SuppressWarnings("unchecked")
     public static <T> T convert(ResponseBody value,Type type)throws IOException {
         String json = value.string();
         JsonObject resultObject;
@@ -44,14 +47,53 @@ public class ResponseHelper {
         }
 
         String dataField = "data";
-        if (!resultObject.has(dataField)){
-            throw new ConverterException("Response json doesn't have '" +dataField+ "',Consulting with server developer to add '" +dataField+ "'.");
+        JsonElement dataElement = null;
+        try{
+            dataElement = resultObject.get(dataField);
+        }catch (Exception ignored){
         }
-        JsonElement dataElement = resultObject.get(dataField);
+
         if (code == 200){
-            return GsonManager.INSTANCE.gson().fromJson(dataElement,type);
+            if (!resultObject.has(dataField)||dataElement==null){
+                String nullValue;
+                if (type==int.class||type==Integer.class){
+                    nullValue = "0";
+                }else if (type==String.class){
+                    return (T) "No data field or data is null";
+                }else if (type==boolean.class||type==Boolean.class){
+                    nullValue = "false";
+                }else if (type==byte.class||type==Byte.class){
+                    nullValue = "0";
+                }else if (type==char.class||type==Character.class){
+                    nullValue = "0";
+                }else if (type==double.class||type==Double.class){
+                    nullValue = "0";
+                }else if (type==float.class||type==Float.class){
+                    nullValue = "0";
+                }else if (type==long.class||type==Long.class){
+                    nullValue = "0";
+                }else if (type==short.class||type==Short.class){
+                    nullValue = "0";
+                }else if (type== Unit.class){
+                    return (T) Unit.INSTANCE;
+                }else {
+                    nullValue = "{}";
+                }
+                return GsonManager.INSTANCE.gson().fromJson(nullValue,type);
+            }else {
+                if (type==String.class){
+                    return (T) dataElement.toString();
+                }else if (type== Unit.class){
+                    return (T) Unit.INSTANCE;
+                }
+                return GsonManager.INSTANCE.gson().fromJson(dataElement,type);
+            }
         }else {
-            throw new ApiException(code, message,dataElement.toString());
+            String errorData = null;
+            if (dataElement!=null){
+                errorData = dataElement.toString();
+            }
+            throw new ApiException(code, message,errorData);
         }
     }
 

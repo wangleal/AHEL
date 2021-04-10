@@ -5,7 +5,7 @@ import android.content.Context;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import io.reactivex.Observable;
+import io.reactivex.rxjava3.core.Observable;
 import wang.leal.ahel.socket.Socket;
 import wang.leal.ahel.socket.SocketStatusListener;
 

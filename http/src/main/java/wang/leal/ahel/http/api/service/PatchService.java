@@ -7,7 +7,6 @@ import wang.leal.ahel.http.api.annotation.PATCH;
 import wang.leal.ahel.http.api.annotation.QueryMap;
 import wang.leal.ahel.http.api.annotation.Url;
 import wang.leal.ahel.http.json.GsonManager;
-import wang.leal.ahel.http.utils.UrlUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -31,8 +30,8 @@ public final class PatchService {
         return stringObservable.map(function);
     }
 
-    public PatchService(String key){
-        this.url = UrlUtil.getUrlByKey(key);
+    public PatchService(String url){
+        this.url = url;
     }
 
     public PatchService header(String key, String value){

@@ -4,7 +4,6 @@ import androidx.annotation.Nullable;
 
 import wang.leal.ahel.http.api.annotation.*;
 import wang.leal.ahel.http.api.converter.Converter;
-import wang.leal.ahel.http.utils.UrlUtil;
 import wang.leal.ahel.http.utils.Utils;
 
 import org.jetbrains.annotations.NotNull;
@@ -19,10 +18,8 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -129,8 +126,6 @@ final class RequestFactory {
         @Nullable
         MediaType contentType;
         @Nullable
-        Set<String> urlParamNames;
-        @Nullable
         ParameterHandler<?>[] parameterHandlers;
 
         Builder(Method method) {
@@ -188,22 +183,22 @@ final class RequestFactory {
 
         private void parseMethodAnnotation(Annotation annotation) {
             if (annotation instanceof DELETE) {
-                parseHttpMethodAndPath("DELETE", ((DELETE) annotation).value(), false);
+                parseHttpMethodAndUrl("DELETE", ((DELETE) annotation).value(), false);
             } else if (annotation instanceof GET) {
-                parseHttpMethodAndPath("GET", ((GET) annotation).value(), false);
+                parseHttpMethodAndUrl("GET", ((GET) annotation).value(), false);
             } else if (annotation instanceof HEAD) {
-                parseHttpMethodAndPath("HEAD", ((HEAD) annotation).value(), false);
+                parseHttpMethodAndUrl("HEAD", ((HEAD) annotation).value(), false);
             } else if (annotation instanceof PATCH) {
-                parseHttpMethodAndPath("PATCH", ((PATCH) annotation).value(), true);
+                parseHttpMethodAndUrl("PATCH", ((PATCH) annotation).value(), true);
             } else if (annotation instanceof POST) {
-                parseHttpMethodAndPath("POST", ((POST) annotation).value(), true);
+                parseHttpMethodAndUrl("POST", ((POST) annotation).value(), true);
             } else if (annotation instanceof PUT) {
-                parseHttpMethodAndPath("PUT", ((PUT) annotation).value(), true);
+                parseHttpMethodAndUrl("PUT", ((PUT) annotation).value(), true);
             } else if (annotation instanceof OPTIONS) {
-                parseHttpMethodAndPath("OPTIONS", ((OPTIONS) annotation).value(), false);
+                parseHttpMethodAndUrl("OPTIONS", ((OPTIONS) annotation).value(), false);
             } else if (annotation instanceof HTTP) {
                 HTTP http = (HTTP) annotation;
-                parseHttpMethodAndPath(http.method(), http.key(), http.hasBody());
+                parseHttpMethodAndUrl(http.method(), http.url(), http.hasBody());
             } else if (annotation instanceof wang.leal.ahel.http.api.annotation.Headers) {
                 String[] headersToParse = ((wang.leal.ahel.http.api.annotation.Headers) annotation).value();
                 if (headersToParse.length == 0) {
@@ -223,7 +218,7 @@ final class RequestFactory {
             }
         }
 
-        private void parseHttpMethodAndPath(String httpMethod, String value, boolean hasBody) {
+        private void parseHttpMethodAndUrl(String httpMethod, String value, boolean hasBody) {
             if (this.httpMethod != null) {
                 throw methodError(
                         method,
@@ -253,12 +248,10 @@ final class RequestFactory {
                 }
             }
 
-            this.url = UrlUtil.getUrlByKey(value);
+            this.url = value;
             if (isBlank(url)) {
-                throw methodError(method, "Can not get url by the key:%s from method:%s", value, method);
+                throw methodError(method, "Url can not be null from method:%s", method);
             }
-
-            this.urlParamNames = parsePathParameters(url);
         }
 
         private Headers parseHeaders(String[] headers) {
@@ -321,9 +314,6 @@ final class RequestFactory {
                 if (gotUrl) {
                     throw parameterError(method, p, "Multiple @Url method annotations found.");
                 }
-                if (gotPath) {
-                    throw parameterError(method, p, "@Path parameters may not be used with @Url.");
-                }
                 if (gotQuery) {
                     throw parameterError(method, p, "A @Url parameter must not come after a @Query.");
                 }
@@ -362,18 +352,10 @@ final class RequestFactory {
                 if (gotQueryMap) {
                     throw parameterError(method, p, "A @Path parameter must not come after a @QueryMap.");
                 }
-                if (gotUrl) {
-                    throw parameterError(method, p, "@Path parameters may not be used with @Url.");
-                }
-                if (isBlank(url)) {
-                    throw parameterError(
-                            method, p, "@Path can only be used with url");
-                }
                 gotPath = true;
 
                 Path path = (Path) annotation;
                 String name = path.value();
-                validatePathName(p, name);
 
                 Converter<?, String> converter = ServiceMethod.converterFactory.stringConverter(type, annotations);
                 return new ParameterHandler.Path<>(method, p, name, converter, path.encoded());
@@ -773,34 +755,6 @@ final class RequestFactory {
                 throw parameterError(
                         method, p, "Parameter type must not include a type variable or wildcard: %s", type);
             }
-        }
-
-        private void validatePathName(int p, String name) {
-            if (!PARAM_NAME_REGEX.matcher(name).matches()) {
-                throw parameterError(
-                        method,
-                        p,
-                        "@Path parameter name must match %s. Found: %s",
-                        PARAM_URL_REGEX.pattern(),
-                        name);
-            }
-            // Verify URL replacement name is actually present in the URL path.
-            if (!urlParamNames.contains(name)) {
-                throw parameterError(method, p, "URL \"%s\" does not contain \"{%s}\".", url, name);
-            }
-        }
-
-        /**
-         * Gets the set of unique path parameters used in the given URI. If a parameter is used twice in
-         * the URI, it will only show up once in the set.
-         */
-        static Set<String> parsePathParameters(String path) {
-            Matcher m = PARAM_URL_REGEX.matcher(path);
-            Set<String> patterns = new LinkedHashSet<>();
-            while (m.find()) {
-                patterns.add(m.group(1));
-            }
-            return patterns;
         }
 
         private static Class<?> boxIfPrimitive(Class<?> type) {

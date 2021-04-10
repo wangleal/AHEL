@@ -16,7 +16,7 @@ class DownloadService(val url: String) {
             try {
                 val response = OkHttpManager.downloadOkHttpClient.newCall(request)
                         .execute()
-                inputStream = response.body()?.byteStream()
+                inputStream = response.body?.byteStream()
                 if (!file.exists()) {
                     file.createNewFile()
                 }

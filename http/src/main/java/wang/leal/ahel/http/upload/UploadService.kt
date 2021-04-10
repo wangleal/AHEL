@@ -4,10 +4,10 @@ import wang.leal.ahel.http.api.converter.ResponseHelper
 import wang.leal.ahel.http.api.create.HttpException
 import wang.leal.ahel.http.okhttp.OkHttpManager
 import io.reactivex.rxjava3.core.Observable
-import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.Request
-import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
 
 
@@ -34,7 +34,7 @@ class UploadService(val url: String) {
         if (!file.exists()){
             return this
         }
-        val requestBody = RequestBody.create(MediaType.parse(mimeType),file)
+        val requestBody = file.asRequestBody(mimeType.toMediaTypeOrNull())
         val part = if (name.isBlank()){
             MultipartBody.Part.create(requestBody)
         }else{
@@ -65,9 +65,9 @@ class UploadService(val url: String) {
             val request: Request = Request.Builder().url(url).post(requestBody).build()
             val response = OkHttpManager.uploadOkHttpClient.newCall(request).execute()
             if (response.isSuccessful){
-                it.onNext(ResponseHelper.convert(response.body(),clazz))
+                it.onNext(ResponseHelper.convert(response.body,clazz))
             }else{
-                it.onError(HttpException(response.code(),response.message()))
+                it.onError(HttpException(response.code, response.message))
             }
         }
     }

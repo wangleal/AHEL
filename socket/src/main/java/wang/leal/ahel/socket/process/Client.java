@@ -16,14 +16,14 @@ import android.os.RemoteException;
 import android.text.TextUtils;
 import android.util.Base64;
 
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import io.reactivex.Observable;
-import io.reactivex.subjects.PublishSubject;
-import io.reactivex.subjects.Subject;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.subjects.PublishSubject;
+import io.reactivex.rxjava3.subjects.Subject;
 import wang.leal.ahel.socket.SocketStatusListener;
 import wang.leal.ahel.socket.log.Logger;
 import wang.leal.ahel.socket.processor.LocalProcessor;
@@ -31,13 +31,13 @@ import wang.leal.ahel.socket.processor.RemoteProcessor;
 
 public class Client {
     private static final Client INSTANCE = new Client();
-    private Map<String,Subject<String>> appSubjects = new HashMap<>();
-    private Map<String, LocalProcessor> requestProcessor = new HashMap<>();
-    private Map<String, RemoteProcessor> receiveProcessor = new HashMap<>();
-    private Map<String, SocketStatusListener> socketStatusListeners = new HashMap<>();
+    private final Map<String, Subject<String>> appSubjects = new HashMap<>();
+    private final Map<String, LocalProcessor> requestProcessor = new HashMap<>();
+    private final Map<String, RemoteProcessor> receiveProcessor = new HashMap<>();
+    private final Map<String, SocketStatusListener> socketStatusListeners = new HashMap<>();
     private Messenger clientMessenger;
     private Messenger serviceMessenger;
-    private ServiceConnection serviceConnection = new ServiceConnection(){
+    private final ServiceConnection serviceConnection = new ServiceConnection(){
 
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
@@ -104,7 +104,7 @@ public class Client {
                         }else {
                             Subject<String> subject = getSubject(data.url,data.port);
                             if (subject!=null){
-                                subject.onNext(new String(bytes, Charset.forName("UTF-8")));
+                                subject.onNext(new String(bytes, StandardCharsets.UTF_8));
                             }
                         }
                         break;
@@ -146,17 +146,12 @@ public class Client {
     }
 
     public Observable<String> registerMessage(String url, int port){
-        Subject<String> subject = getSubject(url,port);
-        if (subject!=null){
-            return subject;
-        }else {
-            return null;
-        }
+        return getSubject(url,port);
     }
 
     private void setSubject(String url,int port){
         if (getSubject(url,port)==null){
-            appSubjects.put(url+":"+port,PublishSubject.<String>create().toSerialized());
+            appSubjects.put(url+":"+port, PublishSubject.<String>create().toSerialized());
         }
     }
 

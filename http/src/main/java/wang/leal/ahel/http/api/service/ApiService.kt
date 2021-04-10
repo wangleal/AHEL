@@ -6,24 +6,24 @@ object ApiService {
         return CreateService
     }
 
-    fun getService(key:String):GetService{
-        return GetService(key)
+    fun getService(url:String):GetService{
+        return GetService(url)
     }
 
-    fun postService(key:String):PostService{
-        return PostService(key)
+    fun postService(url:String):PostService{
+        return PostService(url)
     }
 
-    fun deleteService(key:String):DeleteService{
-        return DeleteService(key)
+    fun deleteService(url:String):DeleteService{
+        return DeleteService(url)
     }
 
-    fun patchService(key:String):PatchService{
-        return PatchService(key)
+    fun patchService(url:String):PatchService{
+        return PatchService(url)
     }
 
-    fun putService(key:String):PutService{
-        return PutService(key)
+    fun putService(url:String):PutService{
+        return PutService(url)
     }
 
 }

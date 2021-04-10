@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
 @Retention(RUNTIME)
 public @interface PATCH {
     /**
-     * A key of Url
+     * The url.
      */
     String value() default "";
 }
