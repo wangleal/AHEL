@@ -352,6 +352,9 @@ final class RequestFactory {
                 if (gotQueryMap) {
                     throw parameterError(method, p, "A @Path parameter must not come after a @QueryMap.");
                 }
+                if (!gotUrl||this.url.isEmpty()){
+                    throw parameterError(method, p, "A @Path parameter must come after a @Url or add url to method annotation value.");
+                }
                 gotPath = true;
 
                 Path path = (Path) annotation;
