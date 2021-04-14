@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import wang.leal.ahel.R;
 import wang.leal.ahel.sample.hardware.SensorActivity;
 import wang.leal.ahel.sample.http.HttpActivity;
+import wang.leal.ahel.sample.lifecycle.LifecycleActivity;
 import wang.leal.ahel.sample.socket.SocketActivity;
 import wang.leal.ahel.sample.utils.UtilsActivity;
 
@@ -22,5 +23,6 @@ public class SampleActivity extends AppCompatActivity {
         findViewById(R.id.bt_utils).setOnClickListener(v -> startActivity(new Intent(SampleActivity.this, UtilsActivity.class)));
         findViewById(R.id.bt_sensor).setOnClickListener(v -> startActivity(new Intent(SampleActivity.this, SensorActivity.class)));
         findViewById(R.id.bt_socket).setOnClickListener(v -> startActivity(new Intent(SampleActivity.this, SocketActivity.class)));
+        findViewById(R.id.bt_lifecycle).setOnClickListener(v -> startActivity(new Intent(SampleActivity.this, LifecycleActivity.class)));
     }
 }

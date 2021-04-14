@@ -68,11 +68,7 @@ public class UIUtil {
     public static int getRealHeight(Activity activity) {
         WindowManager windowManager = activity.getWindowManager();
         Point point = new Point();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            windowManager.getDefaultDisplay().getRealSize(point);
-        } else {
-            windowManager.getDefaultDisplay().getSize(point);
-        }
+        windowManager.getDefaultDisplay().getRealSize(point);
         return point.y;
     }
 

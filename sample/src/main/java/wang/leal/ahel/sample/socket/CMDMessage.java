@@ -6,7 +6,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 import wang.leal.ahel.utils.ByteArrayUtil;
@@ -176,7 +176,7 @@ class CMDMessage {
         if (!len.matches("\\d+")){
             return null;
         }
-        int bodyLength = Integer.valueOf(len);
+        int bodyLength = Integer.parseInt(len);
         if (body==null||body.length<=0){
             if (length>=messageIndex+bodyLength){
                 this.body = Arrays.copyOfRange(message, messageIndex, messageIndex+bodyLength);
@@ -204,7 +204,7 @@ class CMDMessage {
         try {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("cmd",cmd);
-            String data = new String(body,Charset.forName("UTF-8"));
+            String data = new String(body, StandardCharsets.UTF_8);
             JSONTokener jsonTokener = new JSONTokener(data);
             if (jsonTokener.nextValue() instanceof JSONObject){
                 JSONObject bodyJson = new JSONObject(data);
@@ -228,14 +228,14 @@ class CMDMessage {
         return null;
     }
 
-    private StringBuffer stringBuffer = new StringBuffer();
+    private final StringBuffer stringBuffer = new StringBuffer();
     String getRequestMessage(String request){
         stringBuffer.setLength(0);
         String len;
         int length = StringUtil.getStringByteLength(request);
         if (length>9999){
             len = "9999";
-            this.body = Arrays.copyOfRange(request.getBytes(Charset.forName("UTF-8")),0,9999);
+            this.body = Arrays.copyOfRange(request.getBytes(StandardCharsets.UTF_8),0,9999);
         }else if (length>999){
             len = length+"";
         }else if (length>99){
@@ -252,7 +252,7 @@ class CMDMessage {
                 .append("12345678")
                 .append(len)
                 .append("00000000")
-                .append(new String(body,Charset.forName("UTF-8")));
+                .append(new String(body, StandardCharsets.UTF_8));
         return stringBuffer.toString();
     }
 

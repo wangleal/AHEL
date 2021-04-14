@@ -2,14 +2,7 @@ package wang.leal.ahel.http.api.create;
 
 import androidx.annotation.Nullable;
 
-import wang.leal.ahel.http.api.annotation.*;
-import wang.leal.ahel.http.api.converter.Converter;
-import wang.leal.ahel.http.utils.Utils;
-
 import org.jetbrains.annotations.NotNull;
-
-import static wang.leal.ahel.http.utils.Utils.methodError;
-import static wang.leal.ahel.http.utils.Utils.parameterError;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;
@@ -28,6 +21,34 @@ import okhttp3.HttpUrl;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import wang.leal.ahel.http.api.annotation.Body;
+import wang.leal.ahel.http.api.annotation.DELETE;
+import wang.leal.ahel.http.api.annotation.Field;
+import wang.leal.ahel.http.api.annotation.FieldMap;
+import wang.leal.ahel.http.api.annotation.FormUrlEncoded;
+import wang.leal.ahel.http.api.annotation.GET;
+import wang.leal.ahel.http.api.annotation.HEAD;
+import wang.leal.ahel.http.api.annotation.HTTP;
+import wang.leal.ahel.http.api.annotation.Header;
+import wang.leal.ahel.http.api.annotation.HeaderMap;
+import wang.leal.ahel.http.api.annotation.Multipart;
+import wang.leal.ahel.http.api.annotation.OPTIONS;
+import wang.leal.ahel.http.api.annotation.PATCH;
+import wang.leal.ahel.http.api.annotation.POST;
+import wang.leal.ahel.http.api.annotation.PUT;
+import wang.leal.ahel.http.api.annotation.Part;
+import wang.leal.ahel.http.api.annotation.PartMap;
+import wang.leal.ahel.http.api.annotation.Path;
+import wang.leal.ahel.http.api.annotation.Query;
+import wang.leal.ahel.http.api.annotation.QueryMap;
+import wang.leal.ahel.http.api.annotation.QueryName;
+import wang.leal.ahel.http.api.annotation.Tag;
+import wang.leal.ahel.http.api.annotation.Url;
+import wang.leal.ahel.http.api.converter.Converter;
+import wang.leal.ahel.http.utils.Utils;
+
+import static wang.leal.ahel.http.utils.Utils.methodError;
+import static wang.leal.ahel.http.utils.Utils.parameterError;
 
 final class RequestFactory {
     static RequestFactory parseAnnotations(Method method) {
@@ -324,11 +345,10 @@ final class RequestFactory {
                     throw parameterError(method, p, "A @Url parameter must not come after a @QueryMap.");
                 }
                 if (!isBlank(url)) {
-                    throw parameterError(method, p, "The key are already set for %s,so @Url cannot be used.", httpMethod);
+                    throw parameterError(method, p, "The url are already set for %s,so @Url cannot be used.", httpMethod);
                 }
 
                 gotUrl = true;
-
                 if (type == HttpUrl.class
                         || type == String.class
                         || type == URI.class
@@ -352,7 +372,7 @@ final class RequestFactory {
                 if (gotQueryMap) {
                     throw parameterError(method, p, "A @Path parameter must not come after a @QueryMap.");
                 }
-                if (!gotUrl||this.url.isEmpty()){
+                if (!gotUrl && isBlank(this.url)) {
                     throw parameterError(method, p, "A @Path parameter must come after a @Url or add url to method annotation value.");
                 }
                 gotPath = true;
@@ -773,7 +793,7 @@ final class RequestFactory {
         }
     }
 
-    private static boolean isBlank(String text){
+    private static boolean isBlank(String text) {
         return text == null || "".equals(text.trim());
     }
 }

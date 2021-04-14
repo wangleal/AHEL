@@ -1,14 +1,13 @@
 package wang.leal.ahel.http.api
 
-import wang.leal.ahel.http.api.converter.ApiException
-import io.reactivex.rxjava3.core.Observer
 import io.reactivex.rxjava3.disposables.Disposable
+import wang.leal.ahel.http.api.converter.ApiException
 
-open class ApiObserver<T> : Observer<T> {
-    final override fun onSubscribe(d: Disposable) {
-        onStart(d)
+open class ApiObserver<T> {
+    internal fun onSubscribe(disposable: Disposable) {
+        onStart(disposable)
     }
-    final override fun onNext(data: T) {
+    internal fun onNext(data: T) {
         try {
             onSuccess(data)
         } catch (e: Exception) {
@@ -16,7 +15,7 @@ open class ApiObserver<T> : Observer<T> {
         }
     }
 
-    final override fun onError(e: Throwable) {
+    internal final fun onError(e: Throwable) {
         try {
             if (e is ApiException) {
                 onApiError(e.code(), e.message(), e.data())
@@ -34,7 +33,7 @@ open class ApiObserver<T> : Observer<T> {
         }
     }
 
-    final override fun onComplete() {
+    internal final fun onComplete() {
         try {
             onFinal()
         } catch (finalError: Exception) {

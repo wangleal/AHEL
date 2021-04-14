@@ -3,7 +3,7 @@ package wang.leal.ahel.socket.netty;
 import android.util.Base64;
 
 import java.lang.ref.WeakReference;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.TimeUnit;
 
 import io.netty.bootstrap.Bootstrap;
@@ -24,9 +24,9 @@ import wang.leal.ahel.socket.client.IConnection;
 import wang.leal.ahel.socket.log.Logger;
 
 public class Netty implements IConnection {
-    private EventLoopGroup group = new NioEventLoopGroup();
-    private ClientHandler clientHandler = new ClientHandler();
-    private Bootstrap bootstrap = new Bootstrap().group(group)
+    private final EventLoopGroup group = new NioEventLoopGroup();
+    private final ClientHandler clientHandler = new ClientHandler();
+    private final Bootstrap bootstrap = new Bootstrap().group(group)
             .option(ChannelOption.TCP_NODELAY, true)
             .option(ChannelOption.TCP_NODELAY, true)
             .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 5000)
@@ -36,7 +36,7 @@ public class Netty implements IConnection {
                 protected void initChannel(SocketChannel socketChannel){
                     socketChannel.pipeline().addLast(new IdleStateHandler(0, 5, 0, TimeUnit.SECONDS));
                     socketChannel.pipeline().addLast(new ByteArrayDecoder());
-                    socketChannel.pipeline().addLast(new StringEncoder(Charset.forName("UTF-8")));
+                    socketChannel.pipeline().addLast(new StringEncoder(StandardCharsets.UTF_8));
                     socketChannel.pipeline().addLast(clientHandler);
                 }
             });
@@ -92,7 +92,7 @@ public class Netty implements IConnection {
         @Override
         protected void messageReceived(ChannelHandlerContext ctx, byte[] msg) {
             if (listenerWeakReference!=null&&listenerWeakReference.get()!=null){
-                Logger.e("netty receive message:"+new String(msg, Charset.forName("UTF-8")));
+                Logger.e("netty receive message:"+new String(msg, StandardCharsets.UTF_8));
                 listenerWeakReference.get().onMessageReceive(Base64.encodeToString(msg,Base64.DEFAULT));
             }
         }

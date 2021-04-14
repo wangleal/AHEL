@@ -10,7 +10,7 @@ import wang.leal.ahel.socket.log.Logger;
 
 public class SocketService extends Service {
 
-    private Server messengerServer = new Server();
+    private final Server messengerServer = new Server();
 
     @Override
     public final void onCreate() {

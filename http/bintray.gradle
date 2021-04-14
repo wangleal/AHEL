@@ -4,7 +4,7 @@ ext{
 
     publishedGroupId = 'wang.leal.ahel'
     artifact = 'http'
-    libraryVersion = '0.1.2'
+    libraryVersion = '1.0.0'
 
     libraryName = 'http'
     libraryDescription = 'The http library base on okhttp and retrofit.'

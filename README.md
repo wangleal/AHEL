@@ -1,12 +1,54 @@
 ## AHEL
 Android High Efficiency Library.
 
-AHEL requires at minimum Android 4.0(Api level 14).
+AHEL requires at minimum Android 5.0(Api level 21).
 
 ## http
 Gradle reference：
 ```
 implementation 'wang.leal.ahel:http:latest'
+```
+
+## bus
+Gradle reference：
+```
+implementation 'wang.leal.ahel:bus:latest'
+```
+
+## extension
+Gradle reference：
+```
+implementation 'wang.leal.ahel:extension:latest'
+```
+
+## image
+Gradle reference：
+```
+implementation 'wang.leal.ahel:image:latest'
+```
+
+## lifecycle
+Gradle reference：
+```
+implementation 'wang.leal.ahel:lifecycle:latest'
+```
+
+## player
+Gradle reference：
+```
+implementation 'wang.leal.ahel:player:latest'
+```
+
+## rxLifecycle
+Gradle reference：
+```
+implementation 'wang.leal.ahel:lifecycle-rxjava:latest'
+```
+
+## storage
+Gradle reference：
+```
+implementation 'wang.leal.ahel:storage:latest'
 ```
 
 ## utils

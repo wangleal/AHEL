@@ -11,6 +11,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/bt_utils"
+        app:layout_constraintVertical_chainStyle="packed"
         android:text="@string/http_capital"/>
 
     <Button
@@ -20,6 +22,7 @@
         app:layout_constraintTop_toBottomOf="@id/bt_http"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/bt_sensor"
         android:text="@string/utils"/>
 
     <Button
@@ -29,14 +32,26 @@
         app:layout_constraintTop_toBottomOf="@id/bt_utils"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/bt_socket"
         android:text="@string/sensor"/>
 
     <Button
         android:id="@+id/bt_socket"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/bt_utils"
+        app:layout_constraintTop_toBottomOf="@id/bt_sensor"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/bt_lifecycle"
         android:text="@string/socket"/>
+
+    <Button
+        android:id="@+id/bt_lifecycle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/bt_socket"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:text="@string/lifecycle"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

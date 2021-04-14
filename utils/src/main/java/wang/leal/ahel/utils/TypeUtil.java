@@ -46,7 +46,9 @@ public class TypeUtil {
     }
 
     /**
-     * Returns true if {@code a} and {@code b} are equal.
+     * @param a a
+     * @param b b
+     * @return true if {@code a} and {@code b} are equal.
      */
     public static boolean equals(Type a, Type b) {
         if (a == b) {
@@ -89,7 +91,11 @@ public class TypeUtil {
     }
 
     /**
-     * Returns the generic supertype for {@code supertype}. For example, given a class {@code
+     * @param context   context
+     * @param rawType   RawType
+     * @param toResolve SuperType
+     * @return the generic supertype.
+     * For example, given a class {@code
      * IntegerSet}, the result for when supertype is {@code Set.class} is {@code Set<Integer>} and the
      * result when the supertype is {@code Collection.class} is {@code Collection<Integer>}.
      */
@@ -145,12 +151,14 @@ public class TypeUtil {
     }
 
     /**
-     * Returns the generic form of {@code supertype}. For example, if this is {@code
+     * @return Returns the generic form of {@code supertype}. For example, if this is {@code
      * ArrayList<String>}, this returns {@code Iterable<String>} given the input {@code
      * Iterable.class}.
-     *
+     * @param context   context
+     * @param contextRawType   RawType
      * @param superType a superclass of, or interface implemented by, this.
      */
+
     public static Type getSuperType(Type context, Class<?> contextRawType, Class<?> superType) {
         if (!superType.isAssignableFrom(contextRawType)) throw new IllegalArgumentException();
         return resolve(context, contextRawType,
