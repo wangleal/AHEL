@@ -9,6 +9,8 @@ class PostService(private val server:String) {
             val json = Converter.convert(data)
             SubjectFactory.publishSubject(server)
                     .onNext(json)
+            SubjectFactory.behaviorSubject(server)
+                    .onNext(json)
         }.subscribeOn(BusScheduler.scheduler()).subscribe()
     }
 
