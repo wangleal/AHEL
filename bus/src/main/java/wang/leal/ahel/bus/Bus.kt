@@ -2,20 +2,20 @@ package wang.leal.ahel.bus
 
 object Bus {
 
-    fun listen(server:String): ListenService {
-        return BusService.listenService(server)
+    fun listen(vararg actions:String):ListenService{
+        return BusService.listenService(*actions)
     }
 
-    fun post(server:String): PostService {
-        return BusService.postService(server)
+    fun post(action:String):PostService{
+        return BusService.postService(action)
     }
 
-    fun request(server:String): RequestService {
-        return BusService.requestService(server)
+    fun request(action:String):RequestService{
+        return BusService.requestService(action)
     }
 
-    fun provide(server: String): ProviderService {
-        return BusService.providerService(server)
+    fun provide(action: String):ProviderService{
+        return BusService.providerService(action)
     }
 
 }

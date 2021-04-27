@@ -2,20 +2,20 @@ package wang.leal.ahel.bus
 
 internal object BusService {
 
-    fun listenService(server:String): ListenService {
-        return ListenService(server)
+    fun listenService(vararg actions:String):ListenService{
+        return ListenService(*actions)
     }
 
-    fun postService(server:String): PostService {
-        return PostService(server)
+    fun postService(action:String):PostService{
+        return PostService(action)
     }
 
-    fun requestService(server:String): RequestService {
-        return RequestService(server)
+    fun requestService(action:String):RequestService{
+        return RequestService(action)
     }
 
-    fun providerService(server: String): ProviderService {
-        return ProviderService(server)
+    fun providerService(action: String):ProviderService{
+        return ProviderService(action)
     }
 
 }
