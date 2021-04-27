@@ -3,7 +3,7 @@ package wang.leal.ahel.bus
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 
-class ListenService(private vararg val servers:String) {
+class ListenService(private vararg val actions:String) {
 
     private var isNeedLast = false
     fun needLast():ListenService {
@@ -13,8 +13,8 @@ class ListenService(private vararg val servers:String) {
 
     fun <T> observable(clazz: Class<T>): Observable<Event<T>> {
         val subjects = mutableListOf<Observable<Event<String>>>()
-        for (server:String in servers){
-            subjects.add(subject(server))
+        for (action:String in actions){
+            subjects.add(subject(action))
         }
         return Observable.merge(subjects).map { event ->
             Event(event.action,Converter.convert(event.data, clazz))
@@ -22,13 +22,13 @@ class ListenService(private vararg val servers:String) {
                 .observeOn(AndroidSchedulers.mainThread()).retry()
     }
 
-    private fun subject(server:String):Observable<Event<String>>{
+    private fun subject(action:String):Observable<Event<String>>{
         return if (isNeedLast) {
-            SubjectFactory.behaviorSubject(server)
+            SubjectFactory.behaviorSubject(action)
         } else {
-            SubjectFactory.publishSubject(server)
+            SubjectFactory.publishSubject(action)
         }.map {
-            Event(server,it)
+            Event(action,it)
         }
     }
 

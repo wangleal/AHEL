@@ -1,17 +1,24 @@
 package wang.leal.ahel.bus
 
 import io.reactivex.rxjava3.core.Observable
+import java.util.concurrent.TimeUnit
 
-class PostService(private val server:String) {
+class PostService(private val action:String) {
+
+    private var delay:Long = 0L
+    fun delay(timestamp:Long):PostService{
+        this.delay = timestamp
+        return this
+    }
 
     fun execute(data:Any){
         Observable.create<Unit> {
             val json = Converter.convert(data)
-            SubjectFactory.publishSubject(server)
+            SubjectFactory.publishSubject(action)
                     .onNext(json)
-            SubjectFactory.behaviorSubject(server)
+            SubjectFactory.behaviorSubject(action)
                     .onNext(json)
-        }.subscribeOn(BusScheduler.scheduler()).subscribe()
+        }.delay(delay, TimeUnit.MILLISECONDS).subscribeOn(BusScheduler.scheduler()).subscribe()
     }
 
 }
