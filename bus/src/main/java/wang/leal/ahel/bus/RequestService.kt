@@ -10,6 +10,10 @@ class RequestService(private val action:String) {
         return this
     }
 
+    fun observable(): Observable<Event<String>> {
+        return observable(String::class.java)
+    }
+
     fun <T> observable(clazz:Class<T>): Observable<Event<T>> {
         return Observable.create<Event<T>> {observer->
             try {

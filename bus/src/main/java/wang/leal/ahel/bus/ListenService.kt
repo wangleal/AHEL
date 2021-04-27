@@ -11,6 +11,10 @@ class ListenService(private vararg val actions:String) {
         return this
     }
 
+    fun observable(): Observable<Event<String>> {
+        return observable(String::class.java)
+    }
+
     fun <T> observable(clazz: Class<T>): Observable<Event<T>> {
         val subjects = mutableListOf<Observable<Event<String>>>()
         for (action:String in actions){
