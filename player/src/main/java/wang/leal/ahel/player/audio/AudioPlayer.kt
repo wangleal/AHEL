@@ -52,11 +52,7 @@ class AudioPlayer private constructor(private val player: SimpleExoPlayer)
         return this
     }
 
-    fun loop(): AudioPlayer {
-        return loop(true)
-    }
-
-    fun loop(isLoop:Boolean): AudioPlayer {
+    fun loop(isLoop:Boolean = true): AudioPlayer {
         if (isLoop){
             player.repeatMode = Player.REPEAT_MODE_ONE
         }else{

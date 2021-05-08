@@ -10,7 +10,7 @@ internal object VideoCache {
     private var proxy:HttpProxyCacheServer? = null
     fun initialize(context: Context){
         builder = HttpProxyCacheServer.Builder(context.applicationContext)
-                .maxCacheSize(50 * 1024 * 1024)
+                .maxCacheSize(100 * 1024 * 1024)
 
     }
 

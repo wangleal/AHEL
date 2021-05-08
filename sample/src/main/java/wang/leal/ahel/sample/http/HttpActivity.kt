@@ -11,6 +11,7 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import wang.leal.ahel.R
+import wang.leal.ahel.bus.Bus
 import wang.leal.ahel.http.api.Api
 import wang.leal.ahel.http.api.ApiObserver
 import wang.leal.ahel.http.api.subscribe
@@ -22,8 +23,12 @@ class HttpActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_http)
         findViewById<Button>(R.id.bt_test).setOnClickListener {
-            testDispose()
+            testBus()
         }
+    }
+
+    private fun testBus(){
+        Bus.listen("a","b","c").accept().subscribe()
     }
 
     private var disposable:Disposable? = null

@@ -16,10 +16,10 @@ public abstract class OrientationDetection {
 
     private static final String TAG = "OrientationDetection";
     private int mOrientation = ORIENTATION_UNKNOWN;
-    private SensorManager mSensorManager;
+    private final SensorManager mSensorManager;
     private boolean mEnabled = false;
-    private int mRate;
-    private Sensor mSensor;
+    private final int mRate;
+    private final Sensor mSensor;
     private SensorEventListener mSensorEventListener;
 
     /**

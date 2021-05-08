@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.library'
     id 'kotlin-android'
+    id 'com.vanniktech.maven.publish'
 }
 
 android {
@@ -41,13 +42,4 @@ dependencies {
 
     api 'io.reactivex.rxjava3:rxjava:3.0.10'
     api 'io.reactivex.rxjava3:rxandroid:3.0.0'
-    implementation 'com.dhh:rxLife2:1.2.0'
-    implementation 'com.trello.rxlifecycle4:rxlifecycle:4.0.2'
-
-    implementation 'com.trello.rxlifecycle4:rxlifecycle-android:4.0.2'
-    implementation 'com.trello.rxlifecycle4:rxlifecycle-components:4.0.2'
-    implementation 'com.trello.rxlifecycle4:rxlifecycle-components-preference:4.0.2'
-    implementation 'com.trello.rxlifecycle4:rxlifecycle-android-lifecycle:4.0.2'
-    implementation 'com.trello.rxlifecycle4:rxlifecycle-kotlin:4.0.2'
-    implementation 'com.trello.rxlifecycle4:rxlifecycle-android-lifecycle-kotlin:4.0.2'
 }

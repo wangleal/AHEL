@@ -6,8 +6,8 @@ import wang.leal.ahel.socket.netty.Netty;
 public class SocketClient implements IConnection.OnConnectionListener {
     private IConnection connection;
     private Callback callback;
-    private String url;
-    private int port;
+    private final String url;
+    private final int port;
 
     private SocketClient(String url,int port){
         this.url = url;

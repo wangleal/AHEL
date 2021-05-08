@@ -14,9 +14,9 @@ import wang.leal.ahel.socket.processor.LocalProcessor;
 import wang.leal.ahel.socket.processor.RemoteProcessor;
 
 public class Socket{
-    private static Map<String, Socket> appSockets = new HashMap<>();
-    private String url;
-    private int port;
+    private static final Map<String, Socket> appSockets = new HashMap<>();
+    private final String url;
+    private final int port;
     private Socket(String url,int port){
         this.url = url;
         this.port = port;
@@ -63,14 +63,13 @@ public class Socket{
         Socket socket = appSockets.get(key);
         if (socket!=null){
             Logger.e("socket is not null");
-            return socket;
         }else {
             Client.getInstance().connect(url,port,socketStatusListener,requestProcessor,receiveProcessor);
             socket = new Socket(url,port);
             Logger.e("new socket");
             appSockets.put(key,socket);
-            return socket;
         }
+        return socket;
     }
 
     public void disconnect(){

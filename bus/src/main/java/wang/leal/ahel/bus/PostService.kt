@@ -5,18 +5,25 @@ import java.util.concurrent.TimeUnit
 
 class PostService(private val action:String) {
     private var delay:Long = 0L
+    private val event = Event(action)
     fun delay(timestamp:Long):PostService{
         this.delay = timestamp
         return this
     }
 
-    fun execute(data:Any?=null){
+    fun put(key:String,value:Any?):PostService{
+        value?.let {
+            event.put(key,it)
+        }
+        return this
+    }
+
+    fun send(){
         Observable.create<Unit> {
-            val json = data?.let { Converter.convert(data) }?:"{}"
             SubjectFactory.publishSubject(action)
-                    .onNext(json)
+                    .onNext(event)
             SubjectFactory.behaviorSubject(action)
-                    .onNext(json)
+                    .onNext(event)
         }.delay(delay,TimeUnit.MILLISECONDS).subscribeOn(BusScheduler.scheduler()).subscribe()
     }
 

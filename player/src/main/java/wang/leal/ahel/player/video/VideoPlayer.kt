@@ -63,11 +63,7 @@ class VideoPlayer private constructor(private val player: SimpleExoPlayer)
         return this
     }
 
-    fun loop(): VideoPlayer {
-        return loop(true)
-    }
-
-    fun loop(isLoop:Boolean): VideoPlayer {
+    fun loop(isLoop:Boolean = true): VideoPlayer {
         if (isLoop){
             player.repeatMode = Player.REPEAT_MODE_ONE
         }else{

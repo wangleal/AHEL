@@ -6,33 +6,23 @@ import io.reactivex.rxjava3.core.Observable
 class ListenService(private vararg val actions:String) {
 
     private var isNeedLast = false
-    fun needLast():ListenService {
-        isNeedLast = true
-        return this
-    }
 
-    fun observable(): Observable<Event<String>> {
-        return observable(String::class.java)
-    }
-
-    fun <T> observable(clazz: Class<T>): Observable<Event<T>> {
-        val subjects = mutableListOf<Observable<Event<String>>>()
+    fun accept(isNeedLast:Boolean? = false): Observable<Event> {
+        this.isNeedLast = isNeedLast?:false
+        val subjects = mutableListOf<Observable<Event>>()
         for (action:String in actions){
             subjects.add(subject(action))
         }
-        return Observable.merge(subjects).map { event ->
-            Event(event.action,Converter.convert(event.data, clazz))
-        }.subscribeOn(BusScheduler.scheduler())
+        return Observable.merge(subjects)
+                .subscribeOn(BusScheduler.scheduler())
                 .observeOn(AndroidSchedulers.mainThread()).retry()
     }
 
-    private fun subject(action:String):Observable<Event<String>>{
+    private fun subject(action:String):Observable<Event>{
         return if (isNeedLast) {
             SubjectFactory.behaviorSubject(action)
         } else {
             SubjectFactory.publishSubject(action)
-        }.map {
-            Event(action,it)
         }
     }
 

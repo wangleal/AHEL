@@ -4,28 +4,23 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 
 class RequestService(private val action:String) {
-    private var params:Any? = null
-    fun params(params:Any):RequestService{
-        this.params = params
+    private var request:Request = Request(action)
+
+    fun param(key:String,value:Any?):RequestService{
+        value?.let {
+            request.putParam(key,it)
+        }
         return this
     }
 
-    fun observable(): Observable<Event<String>> {
-        return observable(String::class.java)
-    }
-
-    fun <T> observable(clazz:Class<T>): Observable<Event<T>> {
-        return Observable.create<Event<T>> {observer->
+    fun call(): Observable<Response> {
+        return Observable.create<Response> {observer->
             try {
                 CallFactory.get(action)
-                        ?.execute(params?.let {
-                            Converter.convert(it)
-                        }?:"",object :Callback{
-                            override fun call(result: Any?) {
-                                result?.let {
-                                    observer.onNext(Event(action,Converter.convert(Converter.convert(result), clazz)))
-                                    observer.onComplete()
-                                }?:observer.onError(RuntimeException("404: no result!"))
+                        ?.execute(request,object :Callback{
+                            override fun response(response: Response) {
+                                observer.onNext(response)
+                                observer.onComplete()
                             }
                         })?:observer.onError(RuntimeException("404: no such server!"))
             } catch (e: Exception) {

@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.library'
     id 'kotlin-android'
+    id 'com.vanniktech.maven.publish'
 }
 
 android {
@@ -41,7 +42,7 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
-    implementation 'com.google.android.exoplayer:exoplayer:2.13.2'
+    implementation 'com.google.android.exoplayer:exoplayer:2.13.3'
     implementation 'com.danikula:videocache:2.7.1'
     api 'io.reactivex.rxjava3:rxjava:3.0.10'
     api 'io.reactivex.rxjava3:rxandroid:3.0.0'
