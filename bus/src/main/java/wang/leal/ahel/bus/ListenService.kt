@@ -7,6 +7,10 @@ class ListenService(private vararg val actions:String) {
 
     private var isNeedLast = false
 
+    fun accept(): Observable<Event> {
+        return accept(false)
+    }
+
     fun accept(isNeedLast:Boolean? = false): Observable<Event> {
         this.isNeedLast = isNeedLast?:false
         val subjects = mutableListOf<Observable<Event>>()
