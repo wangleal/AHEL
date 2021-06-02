@@ -117,9 +117,13 @@ class GlideService(val context: Context?, private val url: Any):LoaderService {
                         .error(error)
                         .submit()
                 it.setDisposable(GlideTargetDisposable(futureTarget))
-                val bitmap = futureTarget.get()
-                it.onNext(bitmap)
-                it.onComplete()
+                try {
+                    val bitmap = futureTarget.get()
+                    it.onNext(bitmap)
+                    it.onComplete()
+                }catch (e:Exception){
+                    it.onError(e)
+                }
             }
         }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
     }
@@ -138,9 +142,13 @@ class GlideService(val context: Context?, private val url: Any):LoaderService {
                         .apply(RequestOptions().circleCrop())
                         .submit()
                 it.setDisposable(GlideTargetDisposable(futureTarget))
-                val bitmap = futureTarget.get()
-                it.onNext(bitmap)
-                it.onComplete()
+                try {
+                    val bitmap = futureTarget.get()
+                    it.onNext(bitmap)
+                    it.onComplete()
+                }catch (e:Exception){
+                    it.onError(e)
+                }
             }
         }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
     }
@@ -163,9 +171,13 @@ class GlideService(val context: Context?, private val url: Any):LoaderService {
                         .apply(options)
                         .submit()
                 it.setDisposable(GlideTargetDisposable(futureTarget))
-                val bitmap = futureTarget.get()
-                it.onNext(bitmap)
-                it.onComplete()
+                try {
+                    val bitmap = futureTarget.get()
+                    it.onNext(bitmap)
+                    it.onComplete()
+                }catch (e:Exception){
+                    it.onError(e)
+                }
             }
         }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
     }
@@ -188,9 +200,13 @@ class GlideService(val context: Context?, private val url: Any):LoaderService {
                         .apply(options)
                         .submit()
                 it.setDisposable(GlideTargetDisposable(futureTarget))
-                val bitmap = futureTarget.get()
-                it.onNext(bitmap)
-                it.onComplete()
+                try {
+                    val bitmap = futureTarget.get()
+                    it.onNext(bitmap)
+                    it.onComplete()
+                }catch (e:Exception){
+                    it.onError(e)
+                }
             }
         }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
     }
@@ -213,9 +229,13 @@ class GlideService(val context: Context?, private val url: Any):LoaderService {
                         .apply(options)
                         .submit()
                 it.setDisposable(GlideTargetDisposable(futureTarget))
-                val bitmap = futureTarget.get()
-                it.onNext(bitmap)
-                it.onComplete()
+                try {
+                    val bitmap = futureTarget.get()
+                    it.onNext(bitmap)
+                    it.onComplete()
+                }catch (e:Exception){
+                    it.onError(e)
+                }
             }
         }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
     }
@@ -238,9 +258,13 @@ class GlideService(val context: Context?, private val url: Any):LoaderService {
                         .apply(options)
                         .submit()
                 it.setDisposable(GlideTargetDisposable(futureTarget))
-                val bitmap = futureTarget.get()
-                it.onNext(bitmap)
-                it.onComplete()
+                try {
+                    val bitmap = futureTarget.get()
+                    it.onNext(bitmap)
+                    it.onComplete()
+                }catch (e:Exception){
+                    it.onError(e)
+                }
             }
         }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
     }
@@ -263,9 +287,13 @@ class GlideService(val context: Context?, private val url: Any):LoaderService {
                         .apply(options)
                         .submit()
                 it.setDisposable(GlideTargetDisposable(futureTarget))
-                val bitmap = futureTarget.get()
-                it.onNext(bitmap)
-                it.onComplete()
+                try {
+                    val bitmap = futureTarget.get()
+                    it.onNext(bitmap)
+                    it.onComplete()
+                }catch (e:Exception){
+                    it.onError(e)
+                }
             }
         }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
     }
@@ -288,9 +316,13 @@ class GlideService(val context: Context?, private val url: Any):LoaderService {
                         .apply(options)
                         .submit()
                 it.setDisposable(GlideTargetDisposable(futureTarget))
-                val bitmap = futureTarget.get()
-                it.onNext(bitmap)
-                it.onComplete()
+                try {
+                    val bitmap = futureTarget.get()
+                    it.onNext(bitmap)
+                    it.onComplete()
+                }catch (e:Exception){
+                    it.onError(e)
+                }
             }
         }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
     }
