@@ -1,8 +1,6 @@
 package wang.leal.ahel.extension
 
-import java.nio.charset.Charset
 import java.security.MessageDigest
-import java.util.*
 
 fun ByteArray.md5(): String {
     val instance:MessageDigest = MessageDigest.getInstance("MD5")

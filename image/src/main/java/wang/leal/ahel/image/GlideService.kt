@@ -17,7 +17,7 @@ import com.bumptech.glide.request.target.Target
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
-import io.reactivex.rxjava3.schedulers.Schedulers
+import wang.leal.ahel.image.scheduler.GlideScheduler
 import wang.leal.ahel.image.transformation.RoundedCornersTransformation
 
 class GlideService(private val showTarget: Any, private val model: Any) : LoaderService {
@@ -124,7 +124,7 @@ class GlideService(private val showTarget: Any, private val model: Any) : Loader
             } catch (e: Exception) {
                 emitter.onError(e)
             }
-        }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+        }.subscribeOn(GlideScheduler.scheduler()).observeOn(AndroidSchedulers.mainThread())
     }
 
     override fun loadCircle(): Observable<Bitmap> {
@@ -147,7 +147,7 @@ class GlideService(private val showTarget: Any, private val model: Any) : Loader
             } catch (e: Exception) {
                 emitter.onError(e)
             }
-        }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+        }.subscribeOn(GlideScheduler.scheduler()).observeOn(AndroidSchedulers.mainThread())
     }
 
     override fun loadRound(radiusDp: Float): Observable<Bitmap> {
@@ -175,7 +175,7 @@ class GlideService(private val showTarget: Any, private val model: Any) : Loader
             } catch (e: Exception) {
                 emitter.onError(e)
             }
-        }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+        }.subscribeOn(GlideScheduler.scheduler()).observeOn(AndroidSchedulers.mainThread())
     }
 
     override fun loadRound(radiusDp: Float, widthDp: Float, heightDp: Float): Observable<Bitmap> {
@@ -204,7 +204,7 @@ class GlideService(private val showTarget: Any, private val model: Any) : Loader
             } catch (e: Exception) {
                 emitter.onError(e)
             }
-        }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+        }.subscribeOn(GlideScheduler.scheduler()).observeOn(AndroidSchedulers.mainThread())
     }
 
     override fun loadTopRound(radiusDp: Float): Observable<Bitmap> {
@@ -235,7 +235,7 @@ class GlideService(private val showTarget: Any, private val model: Any) : Loader
             } catch (e: Exception) {
                 emitter.onError(e)
             }
-        }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+        }.subscribeOn(GlideScheduler.scheduler()).observeOn(AndroidSchedulers.mainThread())
     }
 
     override fun loadTopRound(
@@ -271,7 +271,7 @@ class GlideService(private val showTarget: Any, private val model: Any) : Loader
             } catch (e: Exception) {
                 emitter.onError(e)
             }
-        }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+        }.subscribeOn(GlideScheduler.scheduler()).observeOn(AndroidSchedulers.mainThread())
     }
 
     override fun loadBottomRound(radiusDp: Float): Observable<Bitmap> {
@@ -302,7 +302,7 @@ class GlideService(private val showTarget: Any, private val model: Any) : Loader
             } catch (e: Exception) {
                 emitter.onError(e)
             }
-        }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+        }.subscribeOn(GlideScheduler.scheduler()).observeOn(AndroidSchedulers.mainThread())
     }
 
     override fun loadBottomRound(
@@ -338,7 +338,7 @@ class GlideService(private val showTarget: Any, private val model: Any) : Loader
             } catch (e: Exception) {
                 emitter.onError(e)
             }
-        }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+        }.subscribeOn(GlideScheduler.scheduler()).observeOn(AndroidSchedulers.mainThread())
     }
 
     inner class GlideTargetDisposable(private val target: Target<Bitmap>) : Disposable {

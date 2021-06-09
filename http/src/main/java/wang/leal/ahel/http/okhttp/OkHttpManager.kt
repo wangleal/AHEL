@@ -14,6 +14,7 @@ object OkHttpManager {
             val httpLoggingInterceptor = HttpLoggingInterceptor()
             httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
             builder.addNetworkInterceptor(httpLoggingInterceptor)
+            builder.addNetworkInterceptor(TimeoutInterceptor())
             return builder.build()
         }
 

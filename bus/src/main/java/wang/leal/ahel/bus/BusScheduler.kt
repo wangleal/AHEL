@@ -6,8 +6,9 @@ import java.util.concurrent.Executors
 
 internal object BusScheduler {
 
+    private val busScheduler = Schedulers.from(Executors.newSingleThreadExecutor { r -> Thread(r, "bus-scheduler") })
     fun scheduler():Scheduler{
-        return Schedulers.from(Executors.newSingleThreadExecutor { r -> Thread(r, "bus-scheduler") })
+        return busScheduler
     }
 
 }

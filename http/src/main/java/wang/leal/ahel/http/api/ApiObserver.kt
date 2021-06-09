@@ -15,8 +15,9 @@ open class ApiObserver<T> {
         }
     }
 
-    internal final fun onError(e: Throwable) {
+    internal fun onError(e: Throwable) {
         try {
+            e.printStackTrace()
             if (e is ApiException) {
                 onApiError(e.code(), e.message(), e.data())
             } else {
@@ -33,7 +34,7 @@ open class ApiObserver<T> {
         }
     }
 
-    internal final fun onComplete() {
+    internal fun onComplete() {
         try {
             onFinal()
         } catch (finalError: Exception) {

@@ -4,14 +4,14 @@ import android.os.Parcelable
 import com.tencent.mmkv.MMKV
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.schedulers.Schedulers
+import wang.leal.ahel.storage.scheduler.StorageScheduler
 
 class KVService(name: String) {
     private val mmkv:MMKV = MMKV.mmkvWithID(name)
     fun encode(key: String, value: String): KVService {
         Observable.create<Unit> {
             mmkv.encode(key, value)
-        }.subscribeOn(Schedulers.io()).subscribe()
+        }.subscribeOn(StorageScheduler.scheduler()).subscribe()
         return this
     }
 
@@ -23,13 +23,13 @@ class KVService(name: String) {
         return Observable.create<String> {
             it.onNext(mmkv.decodeString(key,defaultValue))
             it.onComplete()
-        }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+        }.subscribeOn(StorageScheduler.scheduler()).observeOn(AndroidSchedulers.mainThread())
     }
 
     fun encode(key: String, value: Int): KVService {
         Observable.create<Unit> {
             mmkv.encode(key, value)
-        }.subscribeOn(Schedulers.io()).subscribe()
+        }.subscribeOn(StorageScheduler.scheduler()).subscribe()
         return this
     }
 
@@ -41,13 +41,13 @@ class KVService(name: String) {
         return Observable.create<Int> {
             it.onNext(mmkv.decodeInt(key,defaultValue))
             it.onComplete()
-        }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+        }.subscribeOn(StorageScheduler.scheduler()).observeOn(AndroidSchedulers.mainThread())
     }
 
     fun encode(key: String, value: Float): KVService {
         Observable.create<Unit> {
             mmkv.encode(key, value)
-        }.subscribeOn(Schedulers.io()).subscribe()
+        }.subscribeOn(StorageScheduler.scheduler()).subscribe()
         return this
     }
 
@@ -59,13 +59,13 @@ class KVService(name: String) {
         return Observable.create<Float> {
             it.onNext(mmkv.decodeFloat(key,defaultValue))
             it.onComplete()
-        }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+        }.subscribeOn(StorageScheduler.scheduler()).observeOn(AndroidSchedulers.mainThread())
     }
 
     fun encode(key: String, value: Double): KVService {
         Observable.create<Unit> {
             mmkv.encode(key, value)
-        }.subscribeOn(Schedulers.io()).subscribe()
+        }.subscribeOn(StorageScheduler.scheduler()).subscribe()
         return this
     }
 
@@ -77,13 +77,13 @@ class KVService(name: String) {
         return Observable.create<Double> {
             it.onNext(mmkv.decodeDouble(key,defaultValue))
             it.onComplete()
-        }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+        }.subscribeOn(StorageScheduler.scheduler()).observeOn(AndroidSchedulers.mainThread())
     }
 
     fun encode(key: String, value: ByteArray): KVService {
         Observable.create<Unit> {
             mmkv.encode(key, value)
-        }.subscribeOn(Schedulers.io()).subscribe()
+        }.subscribeOn(StorageScheduler.scheduler()).subscribe()
         return this
     }
 
@@ -95,13 +95,13 @@ class KVService(name: String) {
         return Observable.create<ByteArray> {
             it.onNext(mmkv.decodeBytes(key,defaultValue))
             it.onComplete()
-        }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+        }.subscribeOn(StorageScheduler.scheduler()).observeOn(AndroidSchedulers.mainThread())
     }
 
     fun encode(key: String, value: Long): KVService {
         Observable.create<Unit> {
             mmkv.encode(key, value)
-        }.subscribeOn(Schedulers.io()).subscribe()
+        }.subscribeOn(StorageScheduler.scheduler()).subscribe()
         return this
     }
 
@@ -113,13 +113,13 @@ class KVService(name: String) {
         return Observable.create<Long> {
             it.onNext(mmkv.decodeLong(key,defaultValue))
             it.onComplete()
-        }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+        }.subscribeOn(StorageScheduler.scheduler()).observeOn(AndroidSchedulers.mainThread())
     }
 
     fun encode(key: String, value: Boolean): KVService {
         Observable.create<Unit> {
             mmkv.encode(key, value)
-        }.subscribeOn(Schedulers.io()).subscribe()
+        }.subscribeOn(StorageScheduler.scheduler()).subscribe()
         return this
     }
 
@@ -131,13 +131,13 @@ class KVService(name: String) {
         return Observable.create<Boolean> {
             it.onNext(mmkv.decodeBool(key,defaultValue))
             it.onComplete()
-        }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+        }.subscribeOn(StorageScheduler.scheduler()).observeOn(AndroidSchedulers.mainThread())
     }
 
     fun encode(key: String, value: Parcelable): KVService {
         Observable.create<Unit> {
             mmkv.encode(key, value)
-        }.subscribeOn(Schedulers.io()).subscribe()
+        }.subscribeOn(StorageScheduler.scheduler()).subscribe()
         return this
     }
 
@@ -145,13 +145,13 @@ class KVService(name: String) {
         return Observable.create<T> {
             it.onNext(mmkv.decodeParcelable(key,clazz,defaultValue))
             it.onComplete()
-        }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+        }.subscribeOn(StorageScheduler.scheduler()).observeOn(AndroidSchedulers.mainThread())
     }
 
     fun encode(key: String, value: Set<String>): KVService {
         Observable.create<Unit> {
             mmkv.encode(key, value)
-        }.subscribeOn(Schedulers.io()).subscribe()
+        }.subscribeOn(StorageScheduler.scheduler()).subscribe()
         return this
     }
 
@@ -163,13 +163,13 @@ class KVService(name: String) {
         return Observable.create<Set<String>> {
             it.onNext(mmkv.decodeStringSet(key,defaultValue))
             it.onComplete()
-        }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+        }.subscribeOn(StorageScheduler.scheduler()).observeOn(AndroidSchedulers.mainThread())
     }
 
     fun delete(key:String):KVService{
         Observable.create<Unit> {
             mmkv.remove(key)
-        }.subscribeOn(Schedulers.io()).subscribe()
+        }.subscribeOn(StorageScheduler.scheduler()).subscribe()
         return this
     }
 

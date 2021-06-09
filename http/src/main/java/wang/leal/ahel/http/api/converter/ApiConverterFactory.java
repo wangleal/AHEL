@@ -16,7 +16,7 @@ import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 
 public class ApiConverterFactory extends Converter.Factory{
-    private final Gson gson = GsonManager.INSTANCE.gson();
+    private final Gson gson = GsonManager.gson();
     public static ApiConverterFactory create() {
         return new ApiConverterFactory();
     }

@@ -79,14 +79,14 @@ public class ResponseHelper {
                 }else {
                     nullValue = "{}";
                 }
-                return GsonManager.INSTANCE.gson().fromJson(nullValue,type);
+                return GsonManager.gson().fromJson(nullValue,type);
             }else {
                 if (type==String.class){
                     return (T) dataElement.toString();
                 }else if (type== Unit.class){
                     return (T) Unit.INSTANCE;
                 }
-                return GsonManager.INSTANCE.gson().fromJson(dataElement,type);
+                return GsonManager.gson().fromJson(dataElement,type);
             }
         }else {
             String errorData = null;

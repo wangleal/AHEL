@@ -43,6 +43,7 @@ import wang.leal.ahel.http.api.annotation.Query;
 import wang.leal.ahel.http.api.annotation.QueryMap;
 import wang.leal.ahel.http.api.annotation.QueryName;
 import wang.leal.ahel.http.api.annotation.Tag;
+import wang.leal.ahel.http.api.annotation.Timeout;
 import wang.leal.ahel.http.api.annotation.Url;
 import wang.leal.ahel.http.api.converter.Converter;
 import wang.leal.ahel.http.utils.Utils;
@@ -768,6 +769,12 @@ final class RequestFactory {
                 }
 
                 return new ParameterHandler.Tag<>(tagType);
+            }   else if (annotation instanceof Timeout) {
+                if (Integer.class != type&&int.class !=type) {
+                    throw parameterError(method, p, "@UserId must be of type Integer: " + type);
+                }
+                Converter<?, String> valueConverter = ServiceMethod.converterFactory.stringConverter(type, annotations);
+                return new ParameterHandler.Timeout<>(valueConverter);
             }
 
             return null; // Not a Retrofit annotation.

@@ -436,4 +436,20 @@ abstract class ParameterHandler<T> {
       builder.addTag(cls, value);
     }
   }
+
+  static final class Timeout<T> extends ParameterHandler<T> {
+    private final Converter<T, String> valueConverter;
+
+    Timeout(Converter<T, String> converter) {
+      this.valueConverter = converter;
+    }
+
+    @Override
+    void apply(RequestBuilder builder, @Nullable T value) throws IOException {
+      if (value == null) return;
+      String headerValue = valueConverter.convert(value);
+      if (headerValue == null) return; // Skip converted but null values.
+      builder.addHeader("Request-Timeout", headerValue);
+    }
+  }
 }
