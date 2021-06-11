@@ -2,22 +2,24 @@ package wang.leal.ahel.http.okhttp
 
 import okhttp3.Interceptor
 import okhttp3.Response
-import java.util.concurrent.TimeUnit
+import wang.leal.ahel.http.api.annotation.Timeout
+import wang.leal.ahel.http.api.create.Invocation
+import java.lang.reflect.Method
 
 class TimeoutInterceptor :Interceptor{
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
-        val timeout = request.header("Request-Timeout")?.toInt()
-        val requestBuilder = request.newBuilder()
+        val tag = request.tag(Invocation::class.java)
+        val method: Method? = tag?.method()
+        val timeout: Timeout? = method?.getAnnotation(Timeout::class.java)
         timeout?.let {
-            if (it>0){
-                requestBuilder.removeHeader("Request-Timeout")
-                return chain.withConnectTimeout(timeout, TimeUnit.MILLISECONDS)
-                    .withReadTimeout(timeout,TimeUnit.MILLISECONDS)
-                    .withWriteTimeout(timeout,TimeUnit.MILLISECONDS)
-                    .proceed(requestBuilder.build())
+            if (it.duration>0){
+                return chain.withConnectTimeout(it.duration, it.unit)
+                    .withReadTimeout(it.duration,it.unit)
+                    .withWriteTimeout(it.duration,it.unit)
+                    .proceed(request)
             }
         }
-        return chain.proceed(requestBuilder.build())
+        return chain.proceed(request)
     }
 }

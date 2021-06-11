@@ -3,6 +3,14 @@ package wang.leal.ahel.http.api.service;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
+
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.functions.Function;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 import wang.leal.ahel.http.api.Api;
 import wang.leal.ahel.http.api.annotation.Body;
 import wang.leal.ahel.http.api.annotation.FieldMap;
@@ -12,18 +20,8 @@ import wang.leal.ahel.http.api.annotation.Multipart;
 import wang.leal.ahel.http.api.annotation.POST;
 import wang.leal.ahel.http.api.annotation.PartMap;
 import wang.leal.ahel.http.api.annotation.QueryMap;
-import wang.leal.ahel.http.api.annotation.Timeout;
 import wang.leal.ahel.http.api.annotation.Url;
 import wang.leal.ahel.http.json.GsonManager;
-
-import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
-
-import io.reactivex.rxjava3.core.Observable;
-import io.reactivex.rxjava3.functions.Function;
-import okhttp3.MediaType;
-import okhttp3.RequestBody;
 
 public final class PostService {
     private final String url;
@@ -33,7 +31,6 @@ public final class PostService {
     private final Map<String, RequestBody> requestBodyMap = new HashMap<>();
     private Object body;
     private final Map<String,Object> bodyParams = new HashMap<>();
-    private int timeout = -1;
 
     public PostService(String url) {
         this.url = url;
@@ -46,12 +43,12 @@ public final class PostService {
                 Gson gson = GsonManager.gson();
                 bodyParams.putAll(gson.fromJson(gson.toJson(body),new TypeToken<HashMap<String, Object>>(){}.getType()));
             }
-            Observable<String> stringObservable = Api.create(PostApi.class).body(timeout,url, headerMap, bodyParams, queryMap);
+            Observable<String> stringObservable = Api.create(PostApi.class).body(url, headerMap, bodyParams, queryMap);
             return stringObservable.map(function);
         }
 
         if (fieldMap.size() > 0 && requestBodyMap.size() == 0) {
-            Observable<String> stringObservable = Api.create(PostApi.class).field(timeout,url, headerMap, fieldMap, queryMap);
+            Observable<String> stringObservable = Api.create(PostApi.class).field(url, headerMap, fieldMap, queryMap);
             return stringObservable.map(function);
         }
 
@@ -69,10 +66,10 @@ public final class PostService {
             }
         }
         if (partMap.size() == 0) {
-            Observable<String> stringObservable = Api.create(PostApi.class).post(timeout,url, headerMap, queryMap);
+            Observable<String> stringObservable = Api.create(PostApi.class).post(url, headerMap, queryMap);
             return stringObservable.map(function);
         } else {
-            Observable<String> stringObservable = Api.create(PostApi.class).part(timeout,url, headerMap, partMap, queryMap);
+            Observable<String> stringObservable = Api.create(PostApi.class).part(url, headerMap, partMap, queryMap);
             return stringObservable.map(function);
         }
     }
@@ -146,25 +143,21 @@ public final class PostService {
         return this;
     }
 
-    public PostService timeout(int timeout){
-        this.timeout = timeout;
-        return this;
-    }
 
     public interface PostApi {
         @POST
-        Observable<String> post(@Timeout int timeout, @Url String url, @HeaderMap Map<String, String> headerMap, @QueryMap Map<String, String> queryMap);
+        Observable<String> post(@Url String url, @HeaderMap Map<String, String> headerMap, @QueryMap Map<String, String> queryMap);
 
         @POST
         @FormUrlEncoded
-        Observable<String> field( @Timeout int timeout,@Url String url, @HeaderMap Map<String, String> headerMap, @FieldMap Map<String, String> fieldMap, @QueryMap Map<String, String> queryMap);
+        Observable<String> field(@Url String url, @HeaderMap Map<String, String> headerMap, @FieldMap Map<String, String> fieldMap, @QueryMap Map<String, String> queryMap);
 
         @POST
-        Observable<String> body( @Timeout int timeout,@Url String url, @HeaderMap Map<String, String> headerMap, @Body Object body, @QueryMap Map<String, String> queryMap);
+        Observable<String> body(@Url String url, @HeaderMap Map<String, String> headerMap, @Body Object body, @QueryMap Map<String, String> queryMap);
 
         @POST
         @Multipart
-        Observable<String> part( @Timeout int timeout,@Url String url, @HeaderMap Map<String, String> headerMap, @PartMap Map<String, RequestBody> partMap, @QueryMap Map<String, String> queryMap);
+        Observable<String> part(@Url String url, @HeaderMap Map<String, String> headerMap, @PartMap Map<String, RequestBody> partMap, @QueryMap Map<String, String> queryMap);
 
     }
 }
