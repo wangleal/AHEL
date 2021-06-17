@@ -3,6 +3,7 @@ package wang.leal.ahel.image
 import android.app.Activity
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 import android.util.TypedValue
 import android.view.View
 import android.widget.ImageView
@@ -10,12 +11,16 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
+import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.MultiTransformation
+import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.annotations.NonNull
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.ObservableEmitter
 import io.reactivex.rxjava3.disposables.Disposable
 import wang.leal.ahel.image.scheduler.GlideScheduler
 import wang.leal.ahel.image.transformation.RoundedCornersTransformation
@@ -23,6 +28,7 @@ import wang.leal.ahel.image.transformation.RoundedCornersTransformation
 class GlideService(private val showTarget: Any, private val model: Any) : LoaderService {
     private var placeholder: Int = -1
     private var error: Int = -1
+    private var requestListener:RequestListener? = null
 
     override fun placeholder(placeholder: Int): GlideService {
         this.placeholder = placeholder
@@ -34,22 +40,17 @@ class GlideService(private val showTarget: Any, private val model: Any) : Loader
         return this
     }
 
+    override fun listener(requestListener: RequestListener): GlideService {
+        this.requestListener = requestListener
+        return this
+    }
+
     override fun display(imageView: ImageView) {
-        requestManager()
-            ?.load(model)
-            ?.placeholder(placeholder)
-            ?.error(error)
-            ?.into(imageView)
+        displayImage(RequestOptions(),imageView)
     }
 
     override fun displayCircle(imageView: ImageView) {
-        requestManager()
-            ?.load(model)
-            ?.placeholder(placeholder)
-            ?.error(error)
-            ?.centerCrop()
-            ?.apply(RequestOptions().circleCrop())
-            ?.into(imageView)
+        displayImage(RequestOptions().circleCrop(),imageView)
     }
 
     override fun displayRound(radiusDp: Float, imageView: ImageView) {
@@ -59,13 +60,7 @@ class GlideService(private val showTarget: Any, private val model: Any) : Loader
         )
         val options = RequestOptions.bitmapTransform(multiTransform)
             .override(imageView.width, imageView.height)
-        requestManager()
-            ?.load(model)
-            ?.placeholder(placeholder)
-            ?.error(error)
-            ?.centerCrop()
-            ?.apply(options)
-            ?.into(imageView)
+        displayImage(options,imageView)
     }
 
     override fun displayTopRound(radiusDp: Float, imageView: ImageView) {
@@ -78,13 +73,7 @@ class GlideService(private val showTarget: Any, private val model: Any) : Loader
         )
         val options = RequestOptions.bitmapTransform(multiTransform)
             .override(imageView.width, imageView.height)
-        requestManager()
-            ?.load(model)
-            ?.placeholder(placeholder)
-            ?.error(error)
-            ?.centerCrop()
-            ?.apply(options)
-            ?.into(imageView)
+        displayImage(options,imageView)
     }
 
     override fun displayBottomRound(radiusDp: Float, imageView: ImageView) {
@@ -97,118 +86,78 @@ class GlideService(private val showTarget: Any, private val model: Any) : Loader
         )
         val options = RequestOptions.bitmapTransform(multiTransform)
             .override(imageView.width, imageView.height)
+        displayImage(options,imageView)
+    }
+
+    private fun displayImage(options:RequestOptions,imageView: ImageView){
         requestManager()
             ?.load(model)
             ?.placeholder(placeholder)
             ?.error(error)
             ?.centerCrop()
             ?.apply(options)
+            ?.listener(object :com.bumptech.glide.request.RequestListener<Drawable>{
+                override fun onResourceReady(
+                    resource: Drawable?,
+                    model: Any?,
+                    target: Target<Drawable>?,
+                    dataSource: DataSource?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    requestListener?.onSuccess()
+                    return false
+                }
+
+                override fun onLoadFailed(
+                    e: GlideException?,
+                    model: Any?,
+                    target: Target<Drawable>?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    requestListener?.onFailure()
+                    return false
+                }
+            })
             ?.into(imageView)
     }
 
     override fun load(): Observable<Bitmap> {
-        return Observable.create<Bitmap> {emitter->
-            val futureTarget = requestManager()
-                ?.asBitmap()
-                ?.load(model)
-                ?.placeholder(placeholder)
-                ?.error(error)
-                ?.submit()
-            futureTarget?.let {
-                emitter.setDisposable(GlideTargetDisposable(futureTarget))
-            }
-            try {
-                val bitmap = futureTarget?.get()
-                emitter.onNext(bitmap)
-                emitter.onComplete()
-            } catch (e: Exception) {
-                emitter.onError(e)
-            }
+        return Observable.create<Bitmap> { emitter ->
+            loadBitmap(RequestOptions(), emitter)
         }.subscribeOn(GlideScheduler.scheduler()).observeOn(AndroidSchedulers.mainThread())
     }
 
     override fun loadCircle(): Observable<Bitmap> {
-        return Observable.create<Bitmap> {emitter->
-            val futureTarget = requestManager()
-                ?.asBitmap()
-                ?.load(model)
-                ?.placeholder(placeholder)
-                ?.error(error)
-                ?.centerCrop()
-                ?.apply(RequestOptions().circleCrop())
-                ?.submit()
-            futureTarget?.let {
-                emitter.setDisposable(GlideTargetDisposable(futureTarget))
-            }
-            try {
-                val bitmap = futureTarget?.get()
-                emitter.onNext(bitmap)
-                emitter.onComplete()
-            } catch (e: Exception) {
-                emitter.onError(e)
-            }
+        return Observable.create<Bitmap> { emitter ->
+            loadBitmap(RequestOptions().circleCrop(), emitter)
         }.subscribeOn(GlideScheduler.scheduler()).observeOn(AndroidSchedulers.mainThread())
     }
 
     override fun loadRound(radiusDp: Float): Observable<Bitmap> {
-        return Observable.create<Bitmap> {emitter->
+        return Observable.create<Bitmap> { emitter ->
             val multiTransform: MultiTransformation<Bitmap> = MultiTransformation(
                 CenterCrop(),
                 RoundedCornersTransformation(dp2px(radiusDp))
             )
             val options = RequestOptions.bitmapTransform(multiTransform)
-            val futureTarget = requestManager()
-                ?.asBitmap()
-                ?.load(model)
-                ?.placeholder(placeholder)
-                ?.error(error)
-                ?.centerCrop()
-                ?.apply(options)
-                ?.submit()
-            futureTarget?.let {
-                emitter.setDisposable(GlideTargetDisposable(futureTarget))
-            }
-            try {
-                val bitmap = futureTarget?.get()
-                emitter.onNext(bitmap)
-                emitter.onComplete()
-            } catch (e: Exception) {
-                emitter.onError(e)
-            }
+            loadBitmap(options, emitter)
         }.subscribeOn(GlideScheduler.scheduler()).observeOn(AndroidSchedulers.mainThread())
     }
 
     override fun loadRound(radiusDp: Float, widthDp: Float, heightDp: Float): Observable<Bitmap> {
-        return Observable.create<Bitmap> {emitter->
+        return Observable.create<Bitmap> { emitter ->
             val multiTransform: MultiTransformation<Bitmap> = MultiTransformation(
                 CenterCrop(),
                 RoundedCornersTransformation(dp2px(radiusDp))
             )
             val options = RequestOptions.bitmapTransform(multiTransform)
                 .override(dp2px(widthDp), dp2px(heightDp))
-            val futureTarget = requestManager()
-                ?.asBitmap()
-                ?.load(model)
-                ?.placeholder(placeholder)
-                ?.error(error)
-                ?.centerCrop()
-                ?.apply(options)
-                ?.submit()
-            futureTarget?.let {
-                emitter.setDisposable(GlideTargetDisposable(futureTarget))
-            }
-            try {
-                val bitmap = futureTarget?.get()
-                emitter.onNext(bitmap)
-                emitter.onComplete()
-            } catch (e: Exception) {
-                emitter.onError(e)
-            }
+            loadBitmap(options, emitter)
         }.subscribeOn(GlideScheduler.scheduler()).observeOn(AndroidSchedulers.mainThread())
     }
 
     override fun loadTopRound(radiusDp: Float): Observable<Bitmap> {
-        return Observable.create<Bitmap> {emitter->
+        return Observable.create<Bitmap> { emitter ->
             val multiTransform: MultiTransformation<Bitmap> = MultiTransformation(
                 CenterCrop(),
                 RoundedCornersTransformation(
@@ -217,24 +166,7 @@ class GlideService(private val showTarget: Any, private val model: Any) : Loader
                 )
             )
             val options = RequestOptions.bitmapTransform(multiTransform)
-            val futureTarget = requestManager()
-                ?.asBitmap()
-                ?.load(model)
-                ?.placeholder(placeholder)
-                ?.error(error)
-                ?.centerCrop()
-                ?.apply(options)
-                ?.submit()
-            futureTarget?.let {
-                emitter.setDisposable(GlideTargetDisposable(futureTarget))
-            }
-            try {
-                val bitmap = futureTarget?.get()
-                emitter.onNext(bitmap)
-                emitter.onComplete()
-            } catch (e: Exception) {
-                emitter.onError(e)
-            }
+            loadBitmap(options, emitter)
         }.subscribeOn(GlideScheduler.scheduler()).observeOn(AndroidSchedulers.mainThread())
     }
 
@@ -243,7 +175,7 @@ class GlideService(private val showTarget: Any, private val model: Any) : Loader
         widthDp: Float,
         heightDp: Float
     ): Observable<Bitmap> {
-        return Observable.create<Bitmap> {emitter->
+        return Observable.create<Bitmap> { emitter ->
             val multiTransform: MultiTransformation<Bitmap> = MultiTransformation(
                 CenterCrop(),
                 RoundedCornersTransformation(
@@ -253,29 +185,12 @@ class GlideService(private val showTarget: Any, private val model: Any) : Loader
             )
             val options = RequestOptions.bitmapTransform(multiTransform)
                 .override(dp2px(widthDp), dp2px(heightDp))
-            val futureTarget = requestManager()
-                ?.asBitmap()
-                ?.load(model)
-                ?.placeholder(placeholder)
-                ?.error(error)
-                ?.centerCrop()
-                ?.apply(options)
-                ?.submit()
-            futureTarget?.let {
-                emitter.setDisposable(GlideTargetDisposable(futureTarget))
-            }
-            try {
-                val bitmap = futureTarget?.get()
-                emitter.onNext(bitmap)
-                emitter.onComplete()
-            } catch (e: Exception) {
-                emitter.onError(e)
-            }
+            loadBitmap(options, emitter)
         }.subscribeOn(GlideScheduler.scheduler()).observeOn(AndroidSchedulers.mainThread())
     }
 
     override fun loadBottomRound(radiusDp: Float): Observable<Bitmap> {
-        return Observable.create<Bitmap> {emitter->
+        return Observable.create<Bitmap> { emitter ->
             val multiTransform: MultiTransformation<Bitmap> = MultiTransformation(
                 CenterCrop(),
                 RoundedCornersTransformation(
@@ -284,24 +199,7 @@ class GlideService(private val showTarget: Any, private val model: Any) : Loader
                 )
             )
             val options = RequestOptions.bitmapTransform(multiTransform)
-            val futureTarget = requestManager()
-                ?.asBitmap()
-                ?.load(model)
-                ?.placeholder(placeholder)
-                ?.error(error)
-                ?.centerCrop()
-                ?.apply(options)
-                ?.submit()
-            futureTarget?.let {
-                emitter.setDisposable(GlideTargetDisposable(futureTarget))
-            }
-            try {
-                val bitmap = futureTarget?.get()
-                emitter.onNext(bitmap)
-                emitter.onComplete()
-            } catch (e: Exception) {
-                emitter.onError(e)
-            }
+            loadBitmap(options, emitter)
         }.subscribeOn(GlideScheduler.scheduler()).observeOn(AndroidSchedulers.mainThread())
     }
 
@@ -310,7 +208,7 @@ class GlideService(private val showTarget: Any, private val model: Any) : Loader
         widthDp: Float,
         heightDp: Float
     ): Observable<Bitmap> {
-        return Observable.create<Bitmap> {emitter->
+        return Observable.create<Bitmap> { emitter ->
             val multiTransform: MultiTransformation<Bitmap> = MultiTransformation(
                 CenterCrop(),
                 RoundedCornersTransformation(
@@ -320,25 +218,59 @@ class GlideService(private val showTarget: Any, private val model: Any) : Loader
             )
             val options = RequestOptions.bitmapTransform(multiTransform)
                 .override(dp2px(widthDp), dp2px(heightDp))
-            val futureTarget = requestManager()
-                ?.asBitmap()
-                ?.load(model)
-                ?.placeholder(placeholder)
-                ?.error(error)
-                ?.centerCrop()
-                ?.apply(options)
-                ?.submit()
-            futureTarget?.let {
-                emitter.setDisposable(GlideTargetDisposable(futureTarget))
-            }
-            try {
-                val bitmap = futureTarget?.get()
-                emitter.onNext(bitmap)
-                emitter.onComplete()
-            } catch (e: Exception) {
-                emitter.onError(e)
-            }
+            loadBitmap(options, emitter)
         }.subscribeOn(GlideScheduler.scheduler()).observeOn(AndroidSchedulers.mainThread())
+    }
+
+    private fun loadBitmap(
+        options: RequestOptions,
+        emitter: @NonNull ObservableEmitter<Bitmap>
+    ) {
+        val futureTarget = requestManager()
+            ?.asBitmap()
+            ?.load(model)
+            ?.placeholder(placeholder)
+            ?.error(error)
+            ?.centerCrop()
+            ?.apply(options.skipMemoryCache(true))
+            ?.listener(object :com.bumptech.glide.request.RequestListener<Bitmap>{
+                override fun onResourceReady(
+                    resource: Bitmap?,
+                    model: Any?,
+                    target: Target<Bitmap>?,
+                    dataSource: DataSource?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    requestListener?.onSuccess()
+                    return false
+                }
+
+                override fun onLoadFailed(
+                    e: GlideException?,
+                    model: Any?,
+                    target: Target<Bitmap>?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    requestListener?.onFailure()
+                    return false
+                }
+            })
+            ?.submit()
+        futureTarget?.let {
+            emitter.setDisposable(GlideTargetDisposable(futureTarget))
+        }
+        try {
+            val bitmap = futureTarget?.get()
+            if (bitmap?.isRecycled == false) {
+                val tempBitmap = Bitmap.createBitmap(bitmap)
+                emitter.onNext(tempBitmap)
+                emitter.onComplete()
+            } else {
+                emitter.onError(RuntimeException("Bitmap is recycled!"))
+            }
+        } catch (e: Exception) {
+            emitter.onError(e)
+        }
     }
 
     inner class GlideTargetDisposable(private val target: Target<Bitmap>) : Disposable {
@@ -388,7 +320,7 @@ class GlideService(private val showTarget: Any, private val model: Any) : Loader
         }
     }
 
-    private fun getContext():Context?{
+    private fun getContext(): Context? {
         return when (showTarget) {
             is FragmentActivity -> {
                 showTarget

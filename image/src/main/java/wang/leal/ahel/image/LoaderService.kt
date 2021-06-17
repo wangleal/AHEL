@@ -6,9 +6,9 @@ import androidx.annotation.DrawableRes
 import io.reactivex.rxjava3.core.Observable
 
 interface LoaderService {
-
-    fun placeholder(@DrawableRes placeholder:Int):GlideService
-    fun error(error:Int):GlideService
+    fun placeholder(@DrawableRes placeholder:Int): LoaderService
+    fun error(@DrawableRes error:Int): LoaderService
+    fun listener(requestListener:RequestListener):LoaderService
     fun display(imageView:ImageView)
     fun displayCircle(imageView:ImageView)
     fun displayRound(radiusDp:Float,imageView: ImageView)
@@ -22,4 +22,9 @@ interface LoaderService {
     fun loadRound(radiusDp:Float,widthDp:Float,heightDp:Float): Observable<Bitmap>
     fun loadTopRound(radiusDp:Float,widthDp:Float,heightDp:Float): Observable<Bitmap>
     fun loadBottomRound(radiusDp:Float,widthDp:Float,heightDp:Float): Observable<Bitmap>
+}
+
+interface RequestListener{
+    fun onSuccess()
+    fun onFailure()
 }
