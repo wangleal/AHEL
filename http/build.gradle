@@ -45,4 +45,5 @@ dependencies {
     api 'com.google.code.gson:gson:2.8.6'
     api 'com.squareup.okhttp3:okhttp:4.9.1'
     api 'com.squareup.okhttp3:logging-interceptor:4.9.1'
+    implementation 'dnsjava:dnsjava:3.4.0'
 }

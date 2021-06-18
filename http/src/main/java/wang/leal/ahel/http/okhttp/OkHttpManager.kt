@@ -11,10 +11,11 @@ object OkHttpManager {
             builder.connectTimeout(60, TimeUnit.SECONDS)
             builder.readTimeout(60, TimeUnit.SECONDS)
             builder.writeTimeout(60, TimeUnit.SECONDS)
+            builder.dns(DNSManager())
+            builder.addInterceptor(TimeoutInterceptor())
             val httpLoggingInterceptor = HttpLoggingInterceptor()
             httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
             builder.addNetworkInterceptor(httpLoggingInterceptor)
-            builder.addNetworkInterceptor(TimeoutInterceptor())
             return builder.build()
         }
 
