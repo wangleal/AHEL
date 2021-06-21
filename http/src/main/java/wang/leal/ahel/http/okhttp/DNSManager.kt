@@ -24,7 +24,8 @@ class DNSManager:Dns {
     }
 
     private fun getInetAddress(hostname: String):MutableList<InetAddress> {
-        val ip = Observable.create<String> {
+        val addresses =  mutableListOf<InetAddress>()
+        Observable.create<String> {
             val resolver: Resolver = SimpleResolver("8.8.8.8")
             val lookup = Lookup(hostname, Type.A)
             lookup.setResolver(resolver)
@@ -38,8 +39,11 @@ class DNSManager:Dns {
             } else {
                 it.onError(UnknownHostException())
             }
-        }.timeout(5,TimeUnit.SECONDS)
-            .blockingFirst()
-        return InetAddress.getAllByName(ip).toMutableList()
+        }.timeout(2,TimeUnit.SECONDS)
+            .blockingIterable()
+            .forEach {
+                addresses.add(InetAddress.getByName(it))
+            }
+        return addresses
     }
 }
