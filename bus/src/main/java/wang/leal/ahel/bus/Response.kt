@@ -2,7 +2,7 @@ package wang.leal.ahel.bus
 
 import java.lang.Exception
 
-class Response internal constructor(val code:Int?,val message:String?,val data:Any?){
+class Response constructor(val code:Int?,val message:String?,val data:Any?){
 
     fun code():Int?{
         return code
