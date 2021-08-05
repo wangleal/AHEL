@@ -10,6 +10,7 @@ import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.MultiTransformation
@@ -90,10 +91,12 @@ class GlideService(private val showTarget: Any, private val model: Any) : Loader
     }
 
     private fun displayImage(options:RequestOptions,imageView: ImageView){
+        placeholder = if (placeholder==-1){error}else placeholder
+        error = if (error==-1){placeholder}else error
         requestManager()
             ?.load(model)
-            ?.placeholder(placeholder)
-            ?.error(error)
+            ?.thumbnail(transformPlaceholderDrawableBuilder(options))
+            ?.error(transformErrorDrawableBuilder(options))
             ?.centerCrop()
             ?.apply(options)
             ?.listener(object :com.bumptech.glide.request.RequestListener<Drawable>{
@@ -226,11 +229,13 @@ class GlideService(private val showTarget: Any, private val model: Any) : Loader
         options: RequestOptions,
         emitter: @NonNull ObservableEmitter<Bitmap>
     ) {
+        placeholder = if (placeholder==-1){error}else placeholder
+        error = if (error==-1){placeholder}else error
         val futureTarget = requestManager()
             ?.asBitmap()
             ?.load(model)
-            ?.placeholder(placeholder)
-            ?.error(error)
+            ?.thumbnail(transformPlaceholderBitmapBuilder(options))
+            ?.error(transformErrorBitmapBuilder(options))
             ?.centerCrop()
             ?.apply(options.skipMemoryCache(true))
             ?.listener(object :com.bumptech.glide.request.RequestListener<Bitmap>{
@@ -344,5 +349,21 @@ class GlideService(private val showTarget: Any, private val model: Any) : Loader
                 null
             }
         }
+    }
+
+    private fun transformPlaceholderDrawableBuilder(options:RequestOptions):RequestBuilder<Drawable>?{
+        return requestManager()?.load(placeholder)?.apply(options)
+    }
+
+    private fun transformPlaceholderBitmapBuilder(options:RequestOptions):RequestBuilder<Bitmap>?{
+        return requestManager()?.asBitmap()?.load(placeholder)?.apply(options)
+    }
+
+    private fun transformErrorDrawableBuilder(options:RequestOptions):RequestBuilder<Drawable>?{
+        return requestManager()?.load(error)?.apply(options)
+    }
+
+    private fun transformErrorBitmapBuilder(options:RequestOptions):RequestBuilder<Bitmap>?{
+        return requestManager()?.asBitmap()?.load(error)?.apply(options)
     }
 }

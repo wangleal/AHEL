@@ -7,6 +7,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import wang.leal.ahel.R;
+import wang.leal.ahel.image.Image;
 import wang.leal.ahel.sample.hardware.SensorActivity;
 import wang.leal.ahel.sample.http.HttpActivity;
 import wang.leal.ahel.sample.lifecycle.LifecycleActivity;
@@ -24,5 +25,9 @@ public class SampleActivity extends AppCompatActivity {
         findViewById(R.id.bt_sensor).setOnClickListener(v -> startActivity(new Intent(SampleActivity.this, SensorActivity.class)));
         findViewById(R.id.bt_socket).setOnClickListener(v -> startActivity(new Intent(SampleActivity.this, SocketActivity.class)));
         findViewById(R.id.bt_lifecycle).setOnClickListener(v -> startActivity(new Intent(SampleActivity.this, LifecycleActivity.class)));
+        Image.with(this,"http://cn.bing.com/az/hprichbg/rb/TOAD_ZH-CN7336795473_1920x1080.jpg")
+                .placeholder(R.mipmap.ic_launcher)
+                .error(R.drawable.ic_launcher_background)
+                .displayCircle(findViewById(R.id.iv_image));
     }
 }
