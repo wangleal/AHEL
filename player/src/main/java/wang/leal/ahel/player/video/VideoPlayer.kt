@@ -6,13 +6,11 @@ import android.view.SurfaceHolder
 import android.view.SurfaceView
 import android.view.TextureView
 import com.google.android.exoplayer2.*
-import com.google.android.exoplayer2.device.DeviceListener
-import com.google.android.exoplayer2.video.VideoListener
 import wang.leal.ahel.player.DataSource
 import wang.leal.ahel.player.MediaPlayer
 
 class VideoPlayer private constructor(private val player: SimpleExoPlayer)
-    :DeviceListener, Player.EventListener,VideoListener, MediaPlayer(){
+    :Player.Listener, MediaPlayer(){
 
     private var completedListener:(()->Unit)? = null
     private var renderedStartListener:(()->Unit)? = null
@@ -20,9 +18,7 @@ class VideoPlayer private constructor(private val player: SimpleExoPlayer)
     private var errorListener:((error:Exception)->Unit)? = null
 
     init {
-        player.addDeviceListener(this)
         player.addListener(this)
-        player.addVideoListener(this)
     }
 
     override fun onPlaybackStateChanged(state: Int) {
@@ -39,7 +35,7 @@ class VideoPlayer private constructor(private val player: SimpleExoPlayer)
         videoSizeListener?.invoke(width,height)
     }
 
-    override fun onPlayerError(error: ExoPlaybackException) {
+    override fun onPlayerError(error: PlaybackException) {
         errorListener?.invoke(error)
     }
 

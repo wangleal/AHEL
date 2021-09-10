@@ -1,11 +1,15 @@
 package wang.leal.ahel.sample;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.ImageView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import io.reactivex.rxjava3.functions.Consumer;
 import wang.leal.ahel.R;
 import wang.leal.ahel.image.Image;
 import wang.leal.ahel.sample.hardware.SensorActivity;
@@ -25,9 +29,23 @@ public class SampleActivity extends AppCompatActivity {
         findViewById(R.id.bt_sensor).setOnClickListener(v -> startActivity(new Intent(SampleActivity.this, SensorActivity.class)));
         findViewById(R.id.bt_socket).setOnClickListener(v -> startActivity(new Intent(SampleActivity.this, SocketActivity.class)));
         findViewById(R.id.bt_lifecycle).setOnClickListener(v -> startActivity(new Intent(SampleActivity.this, LifecycleActivity.class)));
+        ImageView imageView = findViewById(R.id.iv_image);
         Image.with(this,"http://cn.bing.com/az/hprichbg/rb/TOAD_ZH-CN7336795473_1920x1080.jpg")
-                .placeholder(R.mipmap.ic_launcher)
+                .placeholder(R.drawable.ic_launcher)
                 .error(R.drawable.ic_launcher_background)
-                .displayCircle(findViewById(R.id.iv_image));
+                .circle()
+                .display(imageView);
+//                .load()
+//                .subscribe(new Consumer<Bitmap>() {
+//                    @Override
+//                    public void accept(Bitmap bitmap) throws Throwable {
+//                        imageView.setImageBitmap(bitmap);
+//                    }
+//                }, new Consumer<Throwable>() {
+//                    @Override
+//                    public void accept(Throwable throwable) throws Throwable {
+//                        throwable.printStackTrace();
+//                    }
+//                });
     }
 }
